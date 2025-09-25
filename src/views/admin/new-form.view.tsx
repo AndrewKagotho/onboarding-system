@@ -22,6 +22,17 @@ export const NewFormView = () => {
   const [dropdownValue, setDropdownValue] = useState('')
   const [checkboxValue, setCheckboxValue] = useState('')
 
+  const renderField = (type: string, data?: []) => {
+    if (type === 'text') return <TextInput />
+    else if (type === 'number') return <NumberInput />
+    else if (type === 'date') return <DateInput />
+    else if (type === 'dropdown') {
+      if (data) return <DropdownInput data={data} />
+    } else if (type === 'checkbox') {
+      if (data) return <CheckboxInput data={data} />
+    } else if (type === 'file') return <FileInput />
+  }
+
   const handleNewSectionChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     (newSection[e.target.id] = e.target.value)
 
@@ -151,39 +162,18 @@ export const NewFormView = () => {
                           )}
                         </p>
                         <div />
-                        {question.type === 'text' ? (
-                          <TextInput />
-                        ) : (
-                          <>
-                            {question.type === 'number' ? (
-                              <NumberInput />
-                            ) : (
-                              <>
-                                {question.type === 'date' ? (
-                                  <DateInput />
-                                ) : (
-                                  <>
-                                    {question.type === 'dropdown' ? (
-                                      <DropdownInput
-                                        data={question.meta.dropdownOptions}
-                                      />
-                                    ) : (
-                                      <>
-                                        {question.type === 'checkbox' ? (
-                                          <CheckboxInput
-                                            data={question.meta.checkboxOptions}
-                                          />
-                                        ) : (
-                                          <FileInput />
-                                        )}
-                                      </>
-                                    )}
-                                  </>
-                                )}
-                              </>
-                            )}
-                          </>
-                        )}
+                        {/* Render input field depending on selected user type */}
+                        {question.type === 'dropdown'
+                          ? renderField(
+                              question.type,
+                              question.meta.dropdownOptions
+                            )
+                          : question.type === 'checkbox'
+                          ? renderField(
+                              question.type,
+                              question.meta.checkboxOptions
+                            )
+                          : renderField(question.type)}
                       </form>
                     )
                   }
