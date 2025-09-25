@@ -1,0 +1,35 @@
+[
+  {
+    "id": "1",
+    "name": "Test Form 1",
+    "sections": [],
+    "submissions": [],
+    "createdOn": 1758719185048,
+    "updatedOn": 1758719185048,
+    "description": "Form testing",
+    "active": 1758719185048,
+    "accessList": []
+  },
+  {
+    "id": "2",
+    "name": "Test Form 2",
+    "sections": [],
+    "submissions": [],
+    "createdOn": 1758719185048,
+    "updatedOn": 1758719185048,
+    "description": "Form testing",
+    "active": null,
+    "accessList": []
+  },
+  {
+    "id": "3",
+    "name": "Test Form 3",
+    "sections": [],
+    "submissions": [],
+    "createdOn": 1758719185048,
+    "updatedOn": 1758719185048,
+    "description": "Form testing",
+    "active": 1758719185048,
+    "accessList": []
+  }
+]
