@@ -11,9 +11,13 @@ export const NewFormView = () => {
   const [isAddingSection, setIsAddingSection] = useState(false)
   const [editingSections, setEditingSections] = useState<string[]>([])
   const [form, setForm] = useState<Record<string, any>>({
-    name: '',
-    description: '',
+    name: 'Untitled form',
+    description: 'Add description...',
     sections: []
+  })
+  const [isEditingHeader, setIsEditingHeader] = useState({
+    name: false,
+    description: false
   })
   const newSection: Record<string, string> = {}
   const [newQuestion, setNewQuestion] = useState<Record<string, any>>({
@@ -31,6 +35,12 @@ export const NewFormView = () => {
     } else if (type === 'checkbox') {
       if (data) return <CheckboxInput data={data} />
     } else if (type === 'file') return <FileInput />
+  }
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value) {
+      setForm({ ...form, [e.target.id]: e.target.value })
+    }
   }
 
   const handleNewSectionChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -140,8 +150,50 @@ export const NewFormView = () => {
   return (
     <main>
       <div className='main_content'>
-        <h1>New Form</h1>
-        <p>(Add sections and questions below)</p>
+        <header>
+          {isEditingHeader.name ? (
+            <input
+              id='name'
+              defaultValue={form.name}
+              onChange={handleFormChange}
+              onBlur={() =>
+                setIsEditingHeader({ ...isEditingHeader, name: false })
+              }
+              onFocus={(e) => e.target.select()}
+              placeholder='Enter name...'
+              className='header_input'
+              autoFocus
+            />
+          ) : (
+            <h1
+              onClick={() =>
+                setIsEditingHeader({ ...isEditingHeader, name: true })
+              }>
+              {form.name}
+            </h1>
+          )}
+          <hr />
+          {isEditingHeader.description ? (
+            <input
+              id='description'
+              defaultValue={form.description}
+              onChange={handleFormChange}
+              onBlur={() =>
+                setIsEditingHeader({ ...isEditingHeader, description: false })
+              }
+              onFocus={(e) => e.target.select()}
+              placeholder='Enter description...'
+              autoFocus
+            />
+          ) : (
+            <p
+              onClick={() =>
+                setIsEditingHeader({ ...isEditingHeader, description: true })
+              }>
+              {form.description}
+            </p>
+          )}
+        </header>
         {form.sections.map((section: Record<string, any>, index: number) => {
           return (
             <section key={section.id}>

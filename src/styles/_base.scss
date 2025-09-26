@@ -21,7 +21,8 @@ main {
   background-color: variables.$white;
 }
 
-h1 {
+h1,
+.header_input {
   font-size: 2rem;
   font-weight: 500;
 }
@@ -54,6 +55,11 @@ a {
   text-decoration: none;
 }
 
+hr {
+  border: none;
+  border-top: 2px solid variables.$shadow;
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -63,9 +69,13 @@ form {
     cursor: pointer;
   }
 
-  input,
+  input:not(.header_input),
   select {
     padding: 0.5rem;
+  }
+
+  input,
+  select {
     border: 1px solid variables.$shadow;
     border-radius: variables.$border_radius;
   }

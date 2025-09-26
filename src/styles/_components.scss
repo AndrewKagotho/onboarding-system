@@ -6,9 +6,10 @@
   flex-direction: column;
   row-gap: 2rem;
 
-  h1 {
-    padding-bottom: 1rem;
-    border-bottom: 2px solid variables.$shadow;
+  header {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
   }
 
   > a {
