@@ -4,24 +4,38 @@
   margin: auto;
   display: flex;
   flex-direction: column;
-  row-gap: 2rem;
+  row-gap: 1.5rem;
 
   header {
+    padding-bottom: 1rem;
+    border-bottom: 2px solid variables.$grey;
     display: flex;
     flex-direction: column;
-    row-gap: 1rem;
+    row-gap: 0.3rem;
   }
 
   > a {
     align-self: flex-end;
   }
 
+  .heading {
+    color: variables.$theme_hover;
+  }
+
+  .description {
+    color: variables.$grey_dark;
+  }
+
   section {
     display: flex;
     flex-direction: column;
     row-gap: 1rem;
-    padding-bottom: 2rem;
+    padding-bottom: 1.5rem;
     border-bottom: 1px solid variables.$shadow;
+
+    > div:first-child {
+      margin-bottom: 0.5rem;
+    }
 
     > button {
       margin-top: 0.3rem;

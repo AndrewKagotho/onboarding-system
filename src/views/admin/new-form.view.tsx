@@ -1,11 +1,6 @@
 import React, { useState } from 'react'
-import { TextInput } from '../../components/form/text.input'
-import { NumberInput } from '../../components/form/number.input'
-import { DateInput } from '../../components/form/date.input'
-import { DropdownInput } from '../../components/form/dropdown.input'
-import { CheckboxInput } from '../../components/form/checkbox.input'
-import { FileInput } from '../../components/form/file.input'
 import { QUESTION_TYPES } from '../../utils/constants'
+import { RenderFormField } from '../../utils/functions'
 
 export const NewFormView = () => {
   const [isAddingSection, setIsAddingSection] = useState(false)
@@ -24,17 +19,6 @@ export const NewFormView = () => {
   const [allQuestions, setAllQuestions] = useState<Record<string, any>[]>([])
   const [dropdownValue, setDropdownValue] = useState('')
   const [checkboxValue, setCheckboxValue] = useState('')
-
-  const renderField = (type: string, data?: []) => {
-    if (type === 'text') return <TextInput />
-    else if (type === 'number') return <NumberInput />
-    else if (type === 'date') return <DateInput />
-    else if (type === 'dropdown') {
-      if (data) return <DropdownInput data={data} />
-    } else if (type === 'checkbox') {
-      if (data) return <CheckboxInput data={data} />
-    } else if (type === 'file') return <FileInput />
-  }
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) {
@@ -190,13 +174,13 @@ export const NewFormView = () => {
             />
           ) : (
             <h1
+              className='heading'
               onClick={() =>
                 setIsEditingHeader({ ...isEditingHeader, name: true })
               }>
               {form.name}
             </h1>
           )}
-          <hr />
           {isEditingHeader.description ? (
             <input
               id='description'
@@ -211,6 +195,7 @@ export const NewFormView = () => {
             />
           ) : (
             <p
+              className='description'
               onClick={() =>
                 setIsEditingHeader({ ...isEditingHeader, description: true })
               }>
@@ -222,8 +207,10 @@ export const NewFormView = () => {
           return (
             <section key={section.id}>
               <div>
-                <h2>{`Section ${index + 1}: ${section.name}`}</h2>
-                <span>{section.description}</span>
+                <h2 className='heading'>
+                  {`Section ${index + 1}: ${section.name}`}
+                </h2>
+                <span className='description'>{section.description}</span>
               </div>
               {section.questions &&
                 section.questions.map(
@@ -237,39 +224,42 @@ export const NewFormView = () => {
                             <span>({question.description})</span>
                           )}
                           {question.required && (
-                            <span className='required'>*Required</span>
+                            <span className='required'>*</span>
                           )}
                         </p>
                         <div />
                         {/* Render input field depending on selected user type */}
                         {question.type === 'dropdown' ? (
-                          renderField(
+                          RenderFormField(
                             question.type,
                             question.meta.dropdownOptions
                           )
                         ) : question.type === 'checkbox' ? (
-                          renderField(
+                          RenderFormField(
                             question.type,
                             question.meta.checkboxOptions
                           )
                         ) : (
                           <>
-                            {renderField(question.type)}
-                            <div />
+                            {RenderFormField(question.type)}
                             {question.conditional && (
-                              <span className='subtext'>
-                                {`Condition: Show if value of `}{' '}
-                                <em className='bold'>{`"${
-                                  findQuestion(question.conditional.question_id)
-                                    ?.statement
-                                }"`}</em>
-                                {' is '}
-                                {`${
-                                  question.conditional.condition === '>'
-                                    ? 'greater'
-                                    : 'less'
-                                } than ${question.conditional.value}`}
-                              </span>
+                              <>
+                                <div />
+                                <span className='subtext'>
+                                  {`Condition: Show if value of `}{' '}
+                                  <em className='bold'>{`"${
+                                    findQuestion(
+                                      question.conditional.question_id
+                                    )?.statement
+                                  }"`}</em>
+                                  {' is '}
+                                  {`${
+                                    question.conditional.condition === '>'
+                                      ? 'greater'
+                                      : 'less'
+                                  } than ${question.conditional.value}`}
+                                </span>
+                              </>
                             )}
                           </>
                         )}
