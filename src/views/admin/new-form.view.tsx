@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { QUESTION_TYPES } from '../../utils/constants'
-import { RenderFormField } from '../../utils/functions'
 
 export const NewFormView = () => {
   const [isAddingSection, setIsAddingSection] = useState(false)
@@ -228,39 +227,56 @@ export const NewFormView = () => {
                           )}
                         </p>
                         <div />
-                        {/* Render input field depending on selected user type */}
-                        {question.type === 'dropdown' ? (
-                          RenderFormField(
-                            question.type,
-                            question.meta.dropdownOptions
-                          )
-                        ) : question.type === 'checkbox' ? (
-                          RenderFormField(
-                            question.type,
-                            question.meta.checkboxOptions
-                          )
-                        ) : (
-                          <>
-                            {RenderFormField(question.type)}
-                            {question.conditional && (
-                              <>
-                                <div />
-                                <span className='subtext'>
-                                  {`Condition: Show if value of `}{' '}
-                                  <em className='bold'>{`"${
-                                    findQuestion(
-                                      question.conditional.question_id
-                                    )?.statement
-                                  }"`}</em>
-                                  {' is '}
-                                  {`${
-                                    question.conditional.condition === '>'
-                                      ? 'greater'
-                                      : 'less'
-                                  } than ${question.conditional.value}`}
-                                </span>
-                              </>
+                        {/* Render input field depending on question type */}
+                        {question.type === 'text' ? (
+                          <input placeholder='Sample answer here...' />
+                        ) : question.type === 'number' ? (
+                          <input type='number' placeholder='Enter number...' />
+                        ) : question.type === 'date' ? (
+                          <input type='date' />
+                        ) : question.type === 'dropdown' ? (
+                          <select>
+                            <option value='' hidden>
+                              Select from list...
+                            </option>
+                            {question.meta.dropdownOptions.map(
+                              (type: string, index: number) => (
+                                <option value={type} key={index}>
+                                  {type}
+                                </option>
+                              )
                             )}
+                          </select>
+                        ) : question.type === 'checkbox' ? (
+                          <div className='checkbox_container'>
+                            {question.meta.checkboxOptions.map(
+                              (value: string, index: number) => (
+                                <div key={index}>
+                                  <input id={value} type='checkbox' />
+                                  <label htmlFor={value}>{value}</label>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        ) : (
+                          question.type === 'file' && <input type='file' />
+                        )}
+                        {question.conditional && (
+                          <>
+                            <div />
+                            <span className='subtext'>
+                              {`Condition: Show if value of `}{' '}
+                              <em className='bold'>{`"${
+                                findQuestion(question.conditional.question_id)
+                                  ?.statement
+                              }"`}</em>
+                              {' is '}
+                              {`${
+                                question.conditional.condition === '>'
+                                  ? 'greater'
+                                  : 'less'
+                              } than ${question.conditional.value}`}
+                            </span>
                           </>
                         )}
                       </form>
