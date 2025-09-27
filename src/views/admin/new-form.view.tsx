@@ -20,9 +20,8 @@ export const NewFormView = () => {
     description: false
   })
   const newSection: Record<string, string> = {}
-  const [newQuestion, setNewQuestion] = useState<Record<string, any>>({
-    type: 'text'
-  })
+  const [newQuestion, setNewQuestion] = useState<Record<string, any>>({})
+  const [allQuestions, setAllQuestions] = useState<Record<string, any>[]>([])
   const [dropdownValue, setDropdownValue] = useState('')
   const [checkboxValue, setCheckboxValue] = useState('')
 
@@ -56,6 +55,10 @@ export const NewFormView = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => setDropdownValue(e.target.value)
 
+  const handleNewQuestionCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => setCheckboxValue(e.target.value)
+
   const handleNewQuestionDropdownEdit = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
@@ -64,10 +67,6 @@ export const NewFormView = () => {
       newQuestion.meta.dropdownOptions[index] = e.target.value
     }
   }
-
-  const handleNewQuestionCheckboxChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => setCheckboxValue(e.target.value)
 
   const handleNewQuestionCheckboxEdit = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -78,7 +77,7 @@ export const NewFormView = () => {
     }
   }
 
-  const handleNewQuestionDropdown = (
+  const handleNewQuestionDropdownOptions = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (e.target.value) {
@@ -94,7 +93,7 @@ export const NewFormView = () => {
     }
   }
 
-  const handleNewQuestionCheckbox = (
+  const handleNewQuestionCheckboxOptions = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (e.target.value) {
@@ -110,8 +109,29 @@ export const NewFormView = () => {
     }
   }
 
+  const handleNewQuestionCheckbox = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNewQuestion({
+      ...newQuestion,
+      [e.target.id]: e.target.checked
+    })
+  }
+
+  const handleNewQuestionConditionSelect = (e: any) => {
+    if (e.target.value) {
+      setNewQuestion({
+        ...newQuestion,
+        conditional: {
+          ...newQuestion.conditional,
+          [e.target.id]: e.target.value
+        }
+      })
+    }
+  }
+
   const handleAddQuestion = (sectionId: string) => {
-    setNewQuestion({ type: 'text', id: `QID_${Date.now()}` })
+    setNewQuestion({ id: `QID_${Date.now()}`, type: 'text', required: false })
     setEditingSections((sections) => {
       return [...sections, sectionId]
     })
@@ -144,8 +164,12 @@ export const NewFormView = () => {
 
       return form
     })
+    setAllQuestions([...allQuestions, newQuestion])
     handleCancelQuestion(sectionId)
   }
+
+  const findQuestion = (questionId: string) =>
+    allQuestions.find(({ id }) => id === questionId)
 
   return (
     <main>
@@ -208,24 +232,47 @@ export const NewFormView = () => {
                       <form className='section_question' key={index}>
                         <span>{index + 1}.</span>
                         <p>
-                          {question.statement}{' '}
+                          <span className='bold'>{question.statement}</span>{' '}
                           {question.description && (
                             <span>({question.description})</span>
+                          )}
+                          {question.required && (
+                            <span className='required'>*Required</span>
                           )}
                         </p>
                         <div />
                         {/* Render input field depending on selected user type */}
-                        {question.type === 'dropdown'
-                          ? renderField(
-                              question.type,
-                              question.meta.dropdownOptions
-                            )
-                          : question.type === 'checkbox'
-                          ? renderField(
-                              question.type,
-                              question.meta.checkboxOptions
-                            )
-                          : renderField(question.type)}
+                        {question.type === 'dropdown' ? (
+                          renderField(
+                            question.type,
+                            question.meta.dropdownOptions
+                          )
+                        ) : question.type === 'checkbox' ? (
+                          renderField(
+                            question.type,
+                            question.meta.checkboxOptions
+                          )
+                        ) : (
+                          <>
+                            {renderField(question.type)}
+                            <div />
+                            {question.conditional && (
+                              <span className='subtext'>
+                                {`Condition: Show if value of `}{' '}
+                                <em className='bold'>{`"${
+                                  findQuestion(question.conditional.question_id)
+                                    ?.statement
+                                }"`}</em>
+                                {' is '}
+                                {`${
+                                  question.conditional.condition === '>'
+                                    ? 'greater'
+                                    : 'less'
+                                } than ${question.conditional.value}`}
+                              </span>
+                            )}
+                          </>
+                        )}
                       </form>
                     )
                   }
@@ -291,7 +338,7 @@ export const NewFormView = () => {
                             value={dropdownValue}
                             placeholder='Add option...'
                             onChange={handleNewQuestionDropdownChange}
-                            onBlur={handleNewQuestionDropdown}
+                            onBlur={handleNewQuestionDropdownOptions}
                           />
                         </div>
                       </div>
@@ -330,13 +377,72 @@ export const NewFormView = () => {
                             value={checkboxValue}
                             placeholder='Add option...'
                             onChange={handleNewQuestionCheckboxChange}
-                            onBlur={handleNewQuestionCheckbox}
+                            onBlur={handleNewQuestionCheckboxOptions}
                           />
                         </div>
                       </div>
                     )}
-                    <label htmlFor='rules'>Rules:</label>
-                    <input id='rules' onChange={handleNewQuestionChange} />
+                    <h3>Rules:</h3>
+                    <div className='checkbox_container'>
+                      <div>
+                        <input
+                          id='required'
+                          type='checkbox'
+                          onChange={handleNewQuestionCheckbox}
+                        />
+                        <label htmlFor='required'>Required</label>
+                      </div>
+                    </div>
+                    {!!allQuestions.filter(
+                      (question) => question.type === 'number'
+                    ).length && (
+                      <div className='section-new_rule-list'>
+                        <h3>Conditions:</h3>
+                        <div>
+                          <span>
+                            (Add rule specifying when question should be
+                            displayed i.e "Show if Question 1 &gt; 500".
+                            Optional)
+                          </span>
+                          <label htmlFor='question_id'>Show if question:</label>
+                          <select
+                            id='question_id'
+                            onChange={handleNewQuestionConditionSelect}>
+                            <option value='' hidden>
+                              Select from list...
+                            </option>
+                            {allQuestions
+                              .filter((question) => question.type === 'number')
+                              .map((question, index) => (
+                                <option value={question.id} key={index}>
+                                  {question.statement}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label htmlFor='condition'>Condition:</label>
+                          <select
+                            id='condition'
+                            onChange={handleNewQuestionConditionSelect}>
+                            <option value='' hidden>
+                              Select from list...
+                            </option>
+                            <option value='<'>is less than</option>
+                            <option value='>'>is greater than</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label htmlFor='value'>Value:</label>
+                          <input
+                            id='value'
+                            type='number'
+                            onChange={handleNewQuestionConditionSelect}
+                            placeholder='Enter number...'
+                          />
+                        </div>
+                      </div>
+                    )}
                     <div className='form_actions'>
                       <button
                         type='button'
