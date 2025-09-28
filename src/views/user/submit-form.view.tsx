@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { ReviewFormView } from './review-form.view'
 import form from '../../data/form.json'
 
@@ -98,6 +98,26 @@ export const SubmitFormView = () => {
                       </div>
                       {section.questions.map(
                         (question: Record<string, any>, index: number) => {
+                          if (question.conditional) {
+                            const { questionId, condition, value } =
+                              question.conditional
+
+                            const dependencyQuestion = findQuestion(questionId)
+
+                            if (dependencyQuestion) {
+                              if (
+                                condition === '>' &&
+                                !(dependencyQuestion.answer > Number(value))
+                              ) {
+                                return <Fragment key={index}></Fragment>
+                              } else if (
+                                condition === '<' &&
+                                !(dependencyQuestion.answer < Number(value))
+                              ) {
+                                return <Fragment key={index}></Fragment>
+                              }
+                            }
+                          }
                           return (
                             <div className='section_question' key={index}>
                               <span>{index + 1}.</span>
@@ -191,25 +211,6 @@ export const SubmitFormView = () => {
                                     required={question.required}
                                   />
                                 )
-                              )}
-                              {question.conditional && (
-                                <>
-                                  <div />
-                                  <span className='subtext'>
-                                    {`Condition: Show if value of `}{' '}
-                                    <em className='bold'>{`"${
-                                      findQuestion(
-                                        question.conditional.question_id
-                                      )?.statement
-                                    }"`}</em>
-                                    {' is '}
-                                    {`${
-                                      question.conditional.condition === '>'
-                                        ? 'greater'
-                                        : 'less'
-                                    } than ${question.conditional.value}`}
-                                  </span>
-                                </>
                               )}
                             </div>
                           )

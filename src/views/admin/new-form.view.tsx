@@ -275,7 +275,7 @@ export const NewFormView = () => {
                               <span className='subtext'>
                                 {`Condition: Show if value of `}{' '}
                                 <em className='bold'>{`"${
-                                  findQuestion(question.conditional.question_id)
+                                  findQuestion(question.conditional.questionId)
                                     ?.statement
                                 }"`}</em>
                                 {' is '}
@@ -418,11 +418,11 @@ export const NewFormView = () => {
                               displayed i.e "Show if Question 1 &gt; 500".
                               Optional)
                             </span>
-                            <label htmlFor='question_id'>
+                            <label htmlFor='questionId'>
                               Show if question:
                             </label>
                             <select
-                              id='question_id'
+                              id='questionId'
                               onChange={handleNewQuestionConditionSelect}>
                               <option value='' hidden>
                                 Select from list...
