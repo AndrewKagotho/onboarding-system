@@ -10,6 +10,7 @@ export const SubmitFormView = () => {
   })
   const [answer, setAnswer] = useState({})
   const [allQuestions, setAllQuestions] = useState<Record<string, any>[]>([])
+  const [allCheckboxes] = useState(new Map())
   const [isFillingForm, setIsFillingForm] = useState(true)
 
   useEffect(() => {
@@ -21,18 +22,43 @@ export const SubmitFormView = () => {
 
   const handleChange = (e: any) => setAnswer(e.target.value)
 
+  const manageQuestionCheckboxSet = (set: any, value: string) => {
+    set.has(value) ? set.delete(value) : set.add(value)
+    return set
+  }
+
+  const handleCheckboxChange = (e: any, questionId: string) => {
+    const questionCheckboxes = allCheckboxes.get(questionId)
+
+    questionCheckboxes
+      ? allCheckboxes.set(
+          questionId,
+          manageQuestionCheckboxSet(questionCheckboxes, e.target.id)
+        )
+      : allCheckboxes.set(questionId, new Set().add(e.target.id))
+  }
+
+  const handleFileChange = (e: any) => setAnswer(e.target.files[0])
+
   const saveAnswer = (
     sectionId: Record<string, any>,
-    questionId: Record<string, any>
+    question: Record<string, any>
   ) => {
     const allSections = [...submission.sections]
     const sectionIndex = allSections.findIndex(
       (section: Record<string, any>) => section.id === sectionId
     )
     const questionIndex = allSections[sectionIndex].questions.findIndex(
-      (question: Record<string, any>) => question.id === questionId
+      ({ id }: Record<string, any>) => id === question.id
     )
-    allSections[sectionIndex].questions[questionIndex].answer = answer
+
+    if (question.type === 'checkbox') {
+      allSections[sectionIndex].questions[questionIndex].answer = Array.from(
+        allCheckboxes.get(question.id)
+      )
+    } else {
+      allSections[sectionIndex].questions[questionIndex].answer = answer
+    }
 
     setSubmission({
       ...submission,
@@ -92,7 +118,7 @@ export const SubmitFormView = () => {
                                 <input
                                   onChange={handleChange}
                                   onBlur={() =>
-                                    saveAnswer(section.id, question.id)
+                                    saveAnswer(section.id, question)
                                   }
                                   required={question.required}
                                   placeholder='Enter answer here...'
@@ -102,7 +128,7 @@ export const SubmitFormView = () => {
                                   type='number'
                                   onChange={handleChange}
                                   onBlur={() =>
-                                    saveAnswer(section.id, question.id)
+                                    saveAnswer(section.id, question)
                                   }
                                   required={question.required}
                                   placeholder='Enter number...'
@@ -112,7 +138,7 @@ export const SubmitFormView = () => {
                                   type='date'
                                   onChange={handleChange}
                                   onBlur={() =>
-                                    saveAnswer(section.id, question.id)
+                                    saveAnswer(section.id, question)
                                   }
                                   required={question.required}
                                 />
@@ -120,7 +146,7 @@ export const SubmitFormView = () => {
                                 <select
                                   onChange={handleChange}
                                   onBlur={() =>
-                                    saveAnswer(section.id, question.id)
+                                    saveAnswer(section.id, question)
                                   }
                                   required={question.required}>
                                   <option value='' hidden>
@@ -139,7 +165,16 @@ export const SubmitFormView = () => {
                                   {question.meta.checkboxOptions.map(
                                     (value: string, index: number) => (
                                       <div key={index}>
-                                        <input id={value} type='checkbox' />
+                                        <input
+                                          id={value}
+                                          type='checkbox'
+                                          onChange={(e) =>
+                                            handleCheckboxChange(e, question.id)
+                                          }
+                                          onBlur={() =>
+                                            saveAnswer(section.id, question)
+                                          }
+                                        />
                                         <label htmlFor={value}>{value}</label>
                                       </div>
                                     )
@@ -149,9 +184,9 @@ export const SubmitFormView = () => {
                                 question.type === 'file' && (
                                   <input
                                     type='file'
-                                    onChange={handleChange}
+                                    onChange={handleFileChange}
                                     onBlur={() =>
-                                      saveAnswer(section.id, question.id)
+                                      saveAnswer(section.id, question)
                                     }
                                     required={question.required}
                                   />

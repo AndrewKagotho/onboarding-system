@@ -1,8 +1,14 @@
+import { useEffect } from 'react'
+
 export const ReviewFormView: React.FC<{
   submission: Record<string, any>
   form: Record<string, any>
 }> = (props) => {
   const { submission, form } = props
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <>
@@ -36,7 +42,26 @@ export const ReviewFormView: React.FC<{
                       </p>
                       <div />
                       {question.answer ? (
-                        <span>{question.answer}</span>
+                        <>
+                          {question.type === 'checkbox' ? (
+                            <>
+                              {question.answer.length ? (
+                                <span className='highlight'>
+                                  {question.answer.join(', ')}
+                                </span>
+                              ) : (
+                                <span>-</span>
+                              )}
+                            </>
+                          ) : question.type === 'file' ? (
+                            <span className='highlight'>
+                              <em className='bold'>File:</em>{' '}
+                              {question.answer.name}
+                            </span>
+                          ) : (
+                            <span className='highlight'>{question.answer}</span>
+                          )}
+                        </>
                       ) : (
                         <span>-</span>
                       )}

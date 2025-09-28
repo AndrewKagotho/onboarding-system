@@ -18,4 +18,15 @@
 
 .submit {
   background-color: variables.$green;
+
+  &:hover {
+    background-color: variables.$green_hover;
+  }
+}
+
+.highlight {
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  background-color: variables.$green_fade;
+  border-radius: variables.$border_radius;
 }
