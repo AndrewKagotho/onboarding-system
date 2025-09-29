@@ -1,7 +1,13 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router'
+import { useAppDispatch } from '../../hooks'
+import { createForm } from '../../store/form.slice'
 import { QUESTION_TYPES } from '../../utils/constants'
 
 export const NewFormView = () => {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
   const [isAddingSection, setIsAddingSection] = useState(false)
   const [editingSections, setEditingSections] = useState<string[]>([])
   const [form, setForm] = useState<Record<string, any>>({
@@ -136,6 +142,16 @@ export const NewFormView = () => {
   }
 
   const saveQuestion = (sectionId: string) => {
+    if (newQuestion.type === 'dropdown' && !newQuestion.meta?.dropdownOptions) {
+      alert('Dropdown options missing!')
+      return
+    }
+
+    if (newQuestion.type === 'checkbox' && !newQuestion.meta?.checkboxOptions) {
+      alert('Checkbox options missing!')
+      return
+    }
+
     setForm((form) => {
       const sectionIndex = form.sections.findIndex(
         (section: Record<string, string>) => section.id === sectionId
@@ -147,6 +163,7 @@ export const NewFormView = () => {
 
       return form
     })
+
     setAllQuestions([...allQuestions, newQuestion])
     handleCancelQuestion(sectionId)
   }
@@ -154,8 +171,16 @@ export const NewFormView = () => {
   const findQuestion = (questionId: string) =>
     allQuestions.find(({ id }) => id === questionId)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    try {
+      await dispatch(createForm(form))
+      alert('Form added!')
+      navigate('/')
+    } catch (error) {
+      alert(`Error:, ${error}`)
+    }
   }
 
   return (
@@ -214,7 +239,9 @@ export const NewFormView = () => {
                   <h2 className='heading'>
                     {`Section ${index + 1}: ${section.name}`}
                   </h2>
-                  <span className='description'>{section.description}</span>
+                  {section.description && (
+                    <span className='description'>{section.description}</span>
+                  )}
                 </div>
                 {section.questions &&
                   section.questions.map(
@@ -518,7 +545,9 @@ export const NewFormView = () => {
               New section
             </button>
           )}
-          {!!allQuestions.length && <button className='submit'>Save</button>}
+          <button className='submit' disabled={!allQuestions.length}>
+            Save
+          </button>
         </form>
       </div>
     </main>

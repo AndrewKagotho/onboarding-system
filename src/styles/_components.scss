@@ -1,3 +1,4 @@
+@use 'utilities';
 @use 'variables';
 
 .main_content {
@@ -29,20 +30,11 @@
   }
 
   section {
+    @include utilities.dotted-line-bottom;
     display: flex;
     flex-direction: column;
     row-gap: 1rem;
     padding-bottom: variables.$mid_padding;
-
-    // Dotted line
-    background-image: linear-gradient(
-      to right,
-      rgba(variables.$grey_dark, 0.15) 50%,
-      rgba(255, 255, 255, 0) 0%
-    );
-    background-position: bottom;
-    background-size: 7px 2px;
-    background-repeat: repeat-x;
 
     > div:first-child {
       margin-bottom: 0.5rem;
@@ -117,43 +109,39 @@
   .forms_list {
     display: flex;
     flex-direction: column;
-    row-gap: 1rem;
+    row-gap: calc(variables.$mid_padding / 3);
 
-    > li {
-      padding: 1rem 1.5rem;
-      display: grid;
-      grid-template-columns: 5fr repeat(3, 1fr);
-      align-items: center;
+    li {
+      @include utilities.dotted-line-top;
+      font-size: 0.9rem;
+      padding-top: calc(variables.$mid_padding / 3);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
 
-      &:not(:first-child) {
-        background-color: variables.$white;
-        border: 1px solid variables.$grey_light;
-        border-radius: variables.$border_radius;
-        box-shadow: variables.$box-shadow;
+      h3 {
+        display: flex;
+        align-items: center;
+        column-gap: 0.5rem;
+
+        span:first-child {
+          font-size: 1.2rem;
+        }
       }
 
-      &:first-child {
-        padding: 0 1.5rem;
+      > div {
+        display: flex;
+        flex-direction: column;
 
-        h2 {
-          font-weight: 600;
+        &:last-child {
+          align-items: flex-end;
         }
       }
 
       &:hover {
-        a {
+        a span:first-child {
           text-decoration: underline;
-          text-underline-offset: 4px;
-        }
-      }
-
-      .forms_list_name {
-        display: flex;
-        flex-direction: column;
-
-        em {
-          font-size: 0.9rem;
-          color: variables.$grey;
+          text-underline-offset: 2px;
         }
       }
     }

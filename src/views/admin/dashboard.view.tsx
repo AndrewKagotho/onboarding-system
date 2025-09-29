@@ -1,7 +1,18 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import formData from '../../data/forms.json'
+import { useAppDispatch, useAppSelector } from '../../hooks'
+import { fetchForms } from '../../store/form.slice'
 
 export const DashboardView = () => {
+  const formState = useAppSelector((state) => state.form)
+  const dispatch = useAppDispatch()
+
+  const { data: forms, isLoading } = formState
+
+  useEffect(() => {
+    dispatch(fetchForms())
+  }, [])
+
   const parseDate = (date: number) => {
     const dateObj = new Date(date)
     return `${dateObj.getUTCDate()}/${dateObj.getUTCMonth()}/${dateObj.getUTCFullYear()}`
@@ -9,33 +20,53 @@ export const DashboardView = () => {
   return (
     <main>
       <div className='main_content'>
-        <h1>Forms</h1>
+        <header>
+          <h1 className='heading'>My forms</h1>
+        </header>
         <Link to='/admin/new-form' className='style_button'>
           New form
         </Link>
-        <ul className='forms_list'>
-          <li>
-            <h2>Name</h2>
-            <h2>Created</h2>
-            <h2>Updated</h2>
-            <h2>Active</h2>
-          </li>
-          {formData.map((form) => {
-            return (
-              <li key={form.id}>
-                <div className='forms_list_name'>
-                  <a href='#'>{form.name}</a>
-                  <span>
-                    <em>{form.submissions.length} submissions</em>
-                  </span>
-                </div>
-                <span>{parseDate(form.createdOn)}</span>
-                <span>{parseDate(form.updatedOn)}</span>
-                <span>{form.active ? parseDate(form.active) : '-'}</span>
-              </li>
-            )
-          })}
-        </ul>
+        {isLoading ? (
+          <span>Loading...</span>
+        ) : (
+          <ul className='forms_list'>
+            {forms.length ? (
+              forms.map((form: Record<string, any>) => (
+                <li key={form._id}>
+                  <div>
+                    <a href='#'>
+                      <h3>
+                        <span>{form.name}</span>{' '}
+                        <span
+                          className={
+                            'badge ' +
+                            (form.active ? 'badge-green' : 'badge-grey')
+                          }>
+                          {form.active ? 'Live' : 'Offline'}
+                        </span>
+                      </h3>
+                    </a>
+                    <span>{form.description}</span>
+                  </div>
+                  <div>
+                    {form.submissions ? (
+                      <span>Submissions: {form.submissions.length}</span>
+                    ) : (
+                      '-'
+                    )}
+                    <span>
+                      {form.updatedOn
+                        ? `Last modified: ${parseDate(form.updatedOn)}`
+                        : `Created: ${parseDate(form.createdOn)}`}
+                    </span>
+                  </div>
+                </li>
+              ))
+            ) : (
+              <span>No documents.</span>
+            )}
+          </ul>
+        )}
       </div>
     </main>
   )
