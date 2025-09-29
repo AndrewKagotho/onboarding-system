@@ -53,9 +53,11 @@ export const SubmitFormView = () => {
     )
 
     if (question.type === 'checkbox') {
-      allSections[sectionIndex].questions[questionIndex].answer = Array.from(
-        allCheckboxes.get(question.id)
-      )
+      const checkboxes = allCheckboxes.get(question.id)
+      if (checkboxes) {
+        allSections[sectionIndex].questions[questionIndex].answer =
+          Array.from(checkboxes)
+      }
     } else {
       allSections[sectionIndex].questions[questionIndex].answer = answer
     }

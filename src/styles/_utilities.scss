@@ -18,6 +18,7 @@
 
 .submit {
   background-color: variables.$green;
+  align-self: stretch;
 
   &:hover {
     background-color: variables.$green_hover;

@@ -28,6 +28,12 @@ h1,
   font-weight: 500;
 }
 
+.header_input {
+  outline: none;
+  border: none;
+  line-height: 1;
+}
+
 h2 {
   font-size: 1.6rem;
   font-weight: 500;
@@ -44,6 +50,7 @@ a.style_button {
   border-radius: variables.$border_radius;
   background-color: variables.$theme;
   color: variables.$white;
+  align-self: flex-start;
   cursor: pointer;
 
   &:hover {
@@ -64,7 +71,7 @@ hr {
 form {
   display: flex;
   flex-direction: column;
-  row-gap: 1.5rem;
+  row-gap: variables.$mid_padding;
 
   label {
     cursor: pointer;
@@ -72,13 +79,18 @@ form {
 
   input:not(.header_input),
   select {
-    padding: 0.5rem;
+    padding: 0.4rem;
   }
 
   input,
   select {
-    border: 1px solid variables.$shadow;
-    border-radius: variables.$border_radius;
+    border: none;
+    border-bottom: 1px solid variables.$shadow;
+
+    &:focus {
+      outline: none;
+      border-bottom: 1.5px solid variables.$grey_dark;
+    }
   }
 
   .checkbox_container {
@@ -93,9 +105,9 @@ form {
   }
 
   .form_actions {
-    align-self: flex-end;
-    display: flex;
-    column-gap: 1rem;
     margin-top: 1rem;
+    display: flex;
+    align-self: flex-end;
+    column-gap: 1rem;
   }
 }

@@ -518,7 +518,7 @@ export const NewFormView = () => {
               New section
             </button>
           )}
-          <button className='submit'>Save</button>
+          {!!allQuestions.length && <button className='submit'>Save</button>}
         </form>
       </div>
     </main>
