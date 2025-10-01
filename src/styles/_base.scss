@@ -16,6 +16,11 @@ body {
 
 *[disabled] {
   background-color: variables.$grey;
+  cursor: no-drop;
+
+  &:hover {
+    background-color: variables.$grey;
+  }
 }
 
 main {
@@ -61,7 +66,7 @@ a.style_button {
 }
 
 a {
-  color: variables.$theme;
+  color: variables.$grey_dark;
   text-decoration: none;
 }
 

@@ -177,7 +177,7 @@ export const NewFormView = () => {
     try {
       await dispatch(createForm(form))
       alert('Form added!')
-      navigate('/')
+      navigate('/admin')
     } catch (error) {
       alert(`Error:, ${error}`)
     }

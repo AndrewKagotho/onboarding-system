@@ -1,17 +1,25 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { DashboardView } from './views/admin/dashboard.view'
+import { AdminDashboardView } from './views/admin/admin-dashboard.view'
+import { FormView } from './views/admin/form.view'
 import { NewFormView } from './views/admin/new-form.view'
+import { UserDashboardView } from './views/user/user-dashboard'
 import { SubmitFormView } from './views/user/submit-form.view'
 
 const router = createBrowserRouter([
-  { path: '/', element: <DashboardView /> },
   {
     path: 'admin',
-    children: [{ path: 'new-form', element: <NewFormView /> }]
+    children: [
+      { index: true, element: <AdminDashboardView /> },
+      { path: 'form/:id', element: <FormView /> },
+      { path: 'new-form', element: <NewFormView /> }
+    ]
   },
   {
     path: 'user',
-    children: [{ path: 'submit-form', element: <SubmitFormView /> }]
+    children: [
+      { index: true, element: <UserDashboardView /> },
+      { path: 'submit-form/:id', element: <SubmitFormView /> }
+    ]
   }
 ])
 

@@ -18,10 +18,21 @@ const formSlice = createSlice({
     })
     builder.addCase(fetchForms.fulfilled, (state, action) => {
       state.isLoading = false
-      state.data = action.payload.forms ?? []
+      state.data = action.payload ?? []
       state.error = null
     })
     builder.addCase(fetchForms.rejected, (state, action) => {
+      state.isLoading = false
+      state.error = action.error.message
+    })
+    builder.addCase(fetchForm.pending, (state) => {
+      state.isLoading = true
+    })
+    builder.addCase(fetchForm.fulfilled, (state) => {
+      state.isLoading = false
+      state.error = null
+    })
+    builder.addCase(fetchForm.rejected, (state, action) => {
       state.isLoading = false
       state.error = action.error.message
     })
@@ -48,6 +59,18 @@ export const fetchForms = createAsyncThunk('forms/fetch', async () => {
   }
 })
 
+export const fetchForm = createAsyncThunk(
+  'forms/fetch-one',
+  async (id: string) => {
+    try {
+      const { data } = await FormService.getOne(id)
+      return data
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  }
+)
+
 export const createForm = createAsyncThunk(
   'forms/create',
   async (newForm: Record<string, any>) => {
@@ -60,4 +83,4 @@ export const createForm = createAsyncThunk(
   }
 )
 
-export const { reducer } = formSlice
+export const { reducer: formReducer } = formSlice

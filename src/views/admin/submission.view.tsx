@@ -1,39 +1,23 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '../../hooks'
-import { createSubmission } from '../../store/submission.slice'
 
-export const ReviewFormView: React.FC<{
+export const SubmissionView: React.FC<{
   submission: Record<string, any>
   form: Record<string, any>
+  setIsViewingForm: React.Dispatch<React.SetStateAction<boolean>>
 }> = (props) => {
-  const { submission, form } = props
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
+  const { submission, form, setIsViewingForm } = props
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    try {
-      await dispatch(createSubmission(submission))
-      alert('Form submitted!')
-      navigate('/user')
-    } catch (error) {
-      alert(`Error:, ${error}`)
-    }
-  }
-
   return (
     <>
       <header>
         <h1 className='heading'>{form.name}</h1>
-        <p className='description'>Review submission</p>
+        <p className='description'>{form.description}</p>
       </header>
-      <form onSubmit={handleSubmit}>
+      <form>
         {submission.sections.map(
           (section: Record<string, any>, index: number) => {
             return (
@@ -93,7 +77,12 @@ export const ReviewFormView: React.FC<{
             )
           }
         )}
-        <button className='submit'>Submit</button>
+        <button
+          type='button'
+          className='submit'
+          onClick={() => setIsViewingForm(true)}>
+          Back to submissions
+        </button>
       </form>
     </>
   )

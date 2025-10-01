@@ -2,8 +2,9 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { fetchForms } from '../../store/form.slice'
+import { parseDate } from '../../utils/functions'
 
-export const DashboardView = () => {
+export const AdminDashboardView = () => {
   const formState = useAppSelector((state) => state.form)
   const dispatch = useAppDispatch()
 
@@ -11,12 +12,9 @@ export const DashboardView = () => {
 
   useEffect(() => {
     dispatch(fetchForms())
+    // eslint-disable-next-line
   }, [])
 
-  const parseDate = (date: number) => {
-    const dateObj = new Date(date)
-    return `${dateObj.getUTCDate()}/${dateObj.getUTCMonth()}/${dateObj.getUTCFullYear()}`
-  }
   return (
     <main>
       <div className='main_content'>
@@ -32,11 +30,17 @@ export const DashboardView = () => {
           <ul className='forms_list'>
             {forms.length ? (
               forms.map((form: Record<string, any>) => (
-                <li key={form._id}>
-                  <div>
-                    <a href='#'>
-                      <h3>
-                        <span>{form.name}</span>{' '}
+                <Link to={`/admin/form/${form._id}`} key={form._id}>
+                  <li className='card'>
+                    <div>
+                      <div className='card_title'>
+                        <span>{form.name}</span>
+                        <span
+                          className={
+                            form.active ? 'badge-green-icon' : 'badge-grey-icon'
+                          }>
+                          {' ● '}
+                        </span>
                         <span
                           className={
                             'badge ' +
@@ -44,23 +48,16 @@ export const DashboardView = () => {
                           }>
                           {form.active ? 'Live' : 'Offline'}
                         </span>
-                      </h3>
-                    </a>
-                    <span>{form.description}</span>
-                  </div>
-                  <div>
-                    {form.submissions ? (
-                      <span>Submissions: {form.submissions.length}</span>
-                    ) : (
-                      '-'
-                    )}
-                    <span>
-                      {form.updatedOn
-                        ? `Last modified: ${parseDate(form.updatedOn)}`
-                        : `Created: ${parseDate(form.createdOn)}`}
-                    </span>
-                  </div>
-                </li>
+                      </div>
+                      <span>
+                        {form.updatedOn
+                          ? `Last modified: ${parseDate(form.updatedOn)}`
+                          : `Created: ${parseDate(form.createdOn)}`}
+                      </span>
+                    </div>
+                    <span>Submissions: {form.submissions.length || 'n/a'}</span>
+                  </li>
+                </Link>
               ))
             ) : (
               <span>No documents.</span>

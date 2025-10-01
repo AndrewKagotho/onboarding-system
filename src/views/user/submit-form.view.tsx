@@ -1,24 +1,40 @@
 import { Fragment, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { ReviewFormView } from './review-form.view'
-import form from '../../data/form.json'
+import { useAppDispatch, useAppSelector } from '../../hooks'
+import { fetchForm } from '../../store/form.slice'
 
 export const SubmitFormView = () => {
-  const [submission, setSubmission] = useState<Record<string, any>>({
-    formId: form.id,
-    sections: form.sections,
-    read: false
-  })
+  const dispatch = useAppDispatch()
+  const { id } = useParams()
+
+  const formState = useAppSelector((state) => state.form)
+  const { isLoading } = formState
+
+  const [form, setForm] = useState<Record<string, any>>({})
+  const [submission, setSubmission] = useState<Record<string, any>>({})
   const [answer, setAnswer] = useState({})
   const [allQuestions, setAllQuestions] = useState<Record<string, any>[]>([])
   const [allCheckboxes] = useState(new Map())
   const [isFillingForm, setIsFillingForm] = useState(true)
 
   useEffect(() => {
-    const allQuestions = form.sections.flatMap(
+    getForm(id)
+    // eslint-disable-next-line
+  }, [])
+
+  useEffect(() => {
+    setSubmission({ ...submission, formId: form._id, sections: form.sections })
+
+    const allQuestions = form.sections?.flatMap(
       (section: Record<string, any>) => section.questions
     )
     setAllQuestions(allQuestions)
-  }, [])
+    // eslint-disable-next-line
+  }, [form])
+
+  const getForm = async (id: any) =>
+    setForm(await dispatch(fetchForm(id)).unwrap())
 
   const handleChange = (e: any) => setAnswer(e.target.value)
 
@@ -69,7 +85,7 @@ export const SubmitFormView = () => {
   }
 
   const findQuestion = (questionId: string) =>
-    allQuestions.find(({ id }) => id === questionId)
+    allQuestions?.find(({ id }) => id === questionId)
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -78,15 +94,18 @@ export const SubmitFormView = () => {
 
   return (
     <main>
-      <div className='main_content'>
-        {isFillingForm ? (
+      {isLoading ? (
+        <span>Loading...</span>
+      ) : (
+        <div className='main_content'>
+          {isFillingForm ? (
           <>
             <header>
               <h1 className='heading'>{form.name}</h1>
               <p className='description'>{form.description}</p>
             </header>
             <form onSubmit={handleSubmit}>
-              {form.sections.map(
+              {form.sections?.map(
                 (section: Record<string, any>, index: number) => {
                   return (
                     <section key={section.id}>
@@ -104,7 +123,8 @@ export const SubmitFormView = () => {
                             const { questionId, condition, value } =
                               question.conditional
 
-                            const dependencyQuestion = findQuestion(questionId)
+                            const dependencyQuestion =
+                              findQuestion(questionId)
 
                             if (dependencyQuestion) {
                               if (
@@ -120,6 +140,7 @@ export const SubmitFormView = () => {
                               }
                             }
                           }
+
                           return (
                             <div className='section_question' key={index}>
                               <span>{index + 1}.</span>
@@ -191,7 +212,10 @@ export const SubmitFormView = () => {
                                           id={value}
                                           type='checkbox'
                                           onChange={(e) =>
-                                            handleCheckboxChange(e, question.id)
+                                            handleCheckboxChange(
+                                              e,
+                                              question.id
+                                            )
                                           }
                                           onBlur={() =>
                                             saveAnswer(section.id, question)
@@ -228,7 +252,8 @@ export const SubmitFormView = () => {
         ) : (
           <ReviewFormView submission={submission} form={form} />
         )}
-      </div>
+        </div>
+      )}
     </main>
   )
 }

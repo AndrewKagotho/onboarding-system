@@ -61,12 +61,21 @@
   border-radius: variables.$border_radius_rd;
   background-color: variables.$grey;
   color: variables.$grey_light;
+  text-transform: uppercase;
 }
 
 .badge-green {
   background-color: variables.$green;
 }
 
+.badge-green-icon {
+  color: variables.$green;
+}
+
 .badge-grey {
   background-color: variables.$grey_dark_semi;
+}
+
+.badge-grey-icon {
+  color: variables.$grey_dark_semi;
 }
