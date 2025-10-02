@@ -6,7 +6,7 @@ const normalizeNumber = (num: number) => {
 export const parseDate = (dateArg: number) => {
   const dateObj = new Date(dateArg)
 
-  const date = dateObj.getUTCDate()
+  const date = normalizeNumber(dateObj.getUTCDate())
   const normalizedMonth = normalizeNumber(dateObj.getUTCMonth() + 1)
 
   const year = dateObj.getUTCFullYear()
@@ -17,12 +17,17 @@ export const parseDate = (dateArg: number) => {
 export const parseDateTime = (dateArg: number) => {
   const dateObj = new Date(dateArg)
 
-  const date = dateObj.getUTCDate()
+  const date = normalizeNumber(dateObj.getUTCDate())
   const normalizedMonth = normalizeNumber(dateObj.getUTCMonth() + 1)
 
   const year = dateObj.getUTCFullYear()
   const hours = normalizeNumber(dateObj.getHours())
   const minutes = normalizeNumber(dateObj.getMinutes())
 
-  return `${date}/${normalizedMonth}/${year} (${hours}:${minutes})`
+  return `${date}-${normalizedMonth}-${year} / ${hours}:${minutes}`
+}
+
+export const formatCalendarDate = (dateArg: string) => {
+  const dateArr = dateArg.split('-')
+  return `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`
 }

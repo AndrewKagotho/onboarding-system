@@ -10,7 +10,6 @@ html {
 }
 
 body {
-  background-color: variables.$grey_light;
   color: variables.$grey_dark;
 }
 
@@ -24,11 +23,16 @@ body {
 }
 
 main {
-  width: 100ch;
+  width: 80ch;
   margin: 5rem auto;
-  padding: 2.5rem;
   border-radius: variables.$border_radius;
   background-color: variables.$white;
+
+  &:has(.login) {
+    height: 100vh;
+    margin: auto;
+    display: flex;
+  }
 }
 
 h1,
@@ -86,18 +90,9 @@ form {
 
   input,
   select {
-    padding: 0.4rem;
-  }
-
-  input,
-  select {
-    border: none;
-    border-bottom: 1px solid variables.$shadow;
-
-    &:focus {
-      outline: none;
-      border-bottom: 1.5px solid variables.$grey_dark;
-    }
+    padding: 0.4rem 0.7rem;
+    border: 1px solid variables.$grey;
+    border-radius: variables.$border_radius;
   }
 
   .checkbox_container {

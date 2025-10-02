@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { formatCalendarDate } from '../../utils/functions'
 
 export const SubmissionView: React.FC<{
   submission: Record<string, any>
@@ -13,8 +14,11 @@ export const SubmissionView: React.FC<{
 
   return (
     <>
+      <button className='nav-back' onClick={() => setIsViewingForm(true)}>
+        Back to submissions
+      </button>
       <header>
-        <h1 className='heading'>{form.name}</h1>
+        <h1 className='heading heading-thin'>{form.name}</h1>
         <p className='description'>{form.description}</p>
       </header>
       <form>
@@ -44,28 +48,22 @@ export const SubmissionView: React.FC<{
                         </p>
                         <div />
                         {question.answer ? (
-                          <>
-                            {question.type === 'checkbox' ? (
+                          <span className='highlight'>
+                            {question.type === 'file' ? (
                               <>
-                                {question.answer.length ? (
-                                  <span className='highlight'>
-                                    {question.answer.join(', ')}
-                                  </span>
-                                ) : (
-                                  <span>-</span>
-                                )}
-                              </>
-                            ) : question.type === 'file' ? (
-                              <span className='highlight'>
                                 <em className='bold'>File:</em>{' '}
                                 {question.answer.name}
-                              </span>
+                              </>
                             ) : (
-                              <span className='highlight'>
-                                {question.answer}
-                              </span>
+                              <>
+                                {question.type === 'checkbox'
+                                  ? question.answer.join(', ')
+                                  : question.type === 'date'
+                                  ? formatCalendarDate(question.answer)
+                                  : question.answer}
+                              </>
                             )}
-                          </>
+                          </span>
                         ) : (
                           <span>-</span>
                         )}
@@ -77,12 +75,6 @@ export const SubmissionView: React.FC<{
             )
           }
         )}
-        <button
-          type='button'
-          className='submit'
-          onClick={() => setIsViewingForm(true)}>
-          Back to submissions
-        </button>
       </form>
     </>
   )

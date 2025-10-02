@@ -2,12 +2,14 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../hooks'
 import { createSubmission } from '../../store/submission.slice'
+import { formatCalendarDate } from '../../utils/functions'
 
 export const ReviewFormView: React.FC<{
   submission: Record<string, any>
   form: Record<string, any>
+  setIsFillingForm: React.Dispatch<React.SetStateAction<boolean>>
 }> = (props) => {
-  const { submission, form } = props
+  const { submission, form, setIsFillingForm } = props
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -29,8 +31,11 @@ export const ReviewFormView: React.FC<{
 
   return (
     <>
+      <button className='nav-back' onClick={() => setIsFillingForm(true)}>
+        Back to form
+      </button>
       <header>
-        <h1 className='heading'>{form.name}</h1>
+        <h1 className='heading heading-thin'>{form.name}</h1>
         <p className='description'>Review submission</p>
       </header>
       <form onSubmit={handleSubmit}>
@@ -60,28 +65,22 @@ export const ReviewFormView: React.FC<{
                         </p>
                         <div />
                         {question.answer ? (
-                          <>
-                            {question.type === 'checkbox' ? (
+                          <span className='highlight'>
+                            {question.type === 'file' ? (
                               <>
-                                {question.answer.length ? (
-                                  <span className='highlight'>
-                                    {question.answer.join(', ')}
-                                  </span>
-                                ) : (
-                                  <span>-</span>
-                                )}
-                              </>
-                            ) : question.type === 'file' ? (
-                              <span className='highlight'>
                                 <em className='bold'>File:</em>{' '}
                                 {question.answer.name}
-                              </span>
+                              </>
                             ) : (
-                              <span className='highlight'>
-                                {question.answer}
-                              </span>
+                              <>
+                                {question.type === 'checkbox'
+                                  ? question.answer.join(', ')
+                                  : question.type === 'date'
+                                  ? formatCalendarDate(question.answer)
+                                  : question.answer}
+                              </>
                             )}
-                          </>
+                          </span>
                         ) : (
                           <span>-</span>
                         )}
@@ -93,7 +92,7 @@ export const ReviewFormView: React.FC<{
             )
           }
         )}
-        <button className='submit'>Submit</button>
+        <button className='submit submit-end'>Submit</button>
       </form>
     </>
   )

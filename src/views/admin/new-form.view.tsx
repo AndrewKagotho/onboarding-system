@@ -186,6 +186,9 @@ export const NewFormView = () => {
   return (
     <main>
       <div className='main_content'>
+        <button className='nav-back' onClick={() => navigate('/admin')}>
+          Back to forms
+        </button>
         <header>
           {isEditingHeader.name ? (
             <input
@@ -202,7 +205,7 @@ export const NewFormView = () => {
             />
           ) : (
             <h1
-              className='heading'
+              className='heading heading-thin'
               onClick={() =>
                 setIsEditingHeader({ ...isEditingHeader, name: true })
               }>
@@ -320,7 +323,7 @@ export const NewFormView = () => {
                   )}
                 {editingSections.includes(section.id) ? (
                   <div className='section-new_item'>
-                    <h2>New question</h2>
+                    <h2 className='heading-thin-2'>New question</h2>
                     <div>
                       <label htmlFor='statement'>Question:</label>
                       <input
@@ -513,7 +516,7 @@ export const NewFormView = () => {
           {isAddingSection ? (
             <section>
               <div className='section-new_item'>
-                <h2>New section</h2>
+                <h2 className='heading-thin-2'>New section</h2>
                 <div>
                   <label htmlFor='name'>Name:</label>
                   <input
