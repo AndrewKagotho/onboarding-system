@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { authReducer } from './user.slice'
+import { authReducer } from './auth.slice'
 import { formReducer } from './form.slice'
 import { submissionReducer } from './submission.slice'
 

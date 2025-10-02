@@ -24,7 +24,7 @@ export const parseDateTime = (dateArg: number) => {
   const hours = normalizeNumber(dateObj.getHours())
   const minutes = normalizeNumber(dateObj.getMinutes())
 
-  return `${date}-${normalizedMonth}-${year} / ${hours}:${minutes}`
+  return `${date}-${normalizedMonth}-${year} || ${hours}:${minutes}`
 }
 
 export const formatCalendarDate = (dateArg: string) => {

@@ -11,7 +11,9 @@ export const SubmitFormView = () => {
   const { id } = useParams()
 
   const formState = useAppSelector((state) => state.form)
-  const { isLoading } = formState
+  const submissionState = useAppSelector((state) => state.submission)
+  const { isLoading: isFormLoading } = formState
+  const { isLoading: isSubmissionLoading } = submissionState
 
   const [form, setForm] = useState<Record<string, any>>({})
   const [submission, setSubmission] = useState<Record<string, any>>({})
@@ -96,7 +98,7 @@ export const SubmitFormView = () => {
 
   return (
     <>
-      {isLoading ? (
+      {isFormLoading || isSubmissionLoading ? (
         <Spinner />
       ) : (
         <main>

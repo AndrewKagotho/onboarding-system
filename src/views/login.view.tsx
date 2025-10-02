@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { login } from '../store/user.slice'
+import { login } from '../store/auth.slice'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { Spinner } from '../components/spinner'
 

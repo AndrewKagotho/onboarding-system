@@ -90,7 +90,7 @@ form {
 
   input,
   select {
-    padding: 0.4rem 0.7rem;
+    padding: variables.$padding;
     border: 1px solid variables.$grey;
     border-radius: variables.$border_radius;
   }

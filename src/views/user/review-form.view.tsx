@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '../../hooks'
+import { useAppDispatch, useAppSelector } from '../../hooks'
 import { createSubmission } from '../../store/submission.slice'
 import { formatCalendarDate } from '../../utils/functions'
 
@@ -10,6 +10,10 @@ export const ReviewFormView: React.FC<{
   setIsFillingForm: React.Dispatch<React.SetStateAction<boolean>>
 }> = (props) => {
   const { submission, form, setIsFillingForm } = props
+
+  const authState = useAppSelector((state) => state.auth)
+  const { data: authUser } = authState
+
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -21,8 +25,9 @@ export const ReviewFormView: React.FC<{
     e.preventDefault()
 
     try {
-      await dispatch(createSubmission(submission))
-      alert('Form submitted!')
+      await dispatch(
+        createSubmission({ ...submission, supa_uid: authUser.supa_uid })
+      )
       navigate('/user')
     } catch (error) {
       alert(`Error:, ${error}`)
@@ -65,7 +70,7 @@ export const ReviewFormView: React.FC<{
                         </p>
                         <div />
                         {question.answer ? (
-                          <span className='highlight'>
+                          <span className='subtext subtext-green'>
                             {question.type === 'file' ? (
                               <>
                                 <em className='bold'>File:</em>{' '}

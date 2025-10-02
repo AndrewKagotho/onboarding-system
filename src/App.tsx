@@ -8,7 +8,7 @@ import { SubmitFormView } from './views/user/submit-form.view'
 
 const router = createBrowserRouter([
   {
-    path: 'log-in',
+    path: '/',
     element: <LoginView />
   },
   {

@@ -188,19 +188,20 @@
     font-size: 0.9rem;
     display: flex;
     flex-direction: column;
-    row-gap: 1.3rem;
+    row-gap: 1.5rem;
 
     li {
       display: flex;
+      justify-content: space-between;
       column-gap: 1rem;
+      cursor: pointer;
 
       span *:first-child {
         color: variables.$theme;
       }
 
       &:hover {
-        span *:first-child {
-          cursor: pointer;
+        span em {
           text-decoration: underline;
           text-underline-offset: 3px;
         }

@@ -81,9 +81,12 @@ export const FormView = () => {
                         key={submission._id}
                         onClick={() => handleSubmission(submission)}>
                         <span>
-                          <em className='bold'>Submission {index + 1}</em> -{' '}
-                          {parseDateTime(submission.submittedOn)}
+                          Submission by{' '}
+                          <em className='bold'>
+                            {submission.submittedBy.name}
+                          </em>
                         </span>
+                        <span>{parseDateTime(submission.submittedOn)}</span>
                       </li>
                     ))}
                   </ul>

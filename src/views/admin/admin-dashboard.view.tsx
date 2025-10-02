@@ -66,7 +66,7 @@ export const AdminDashboardView = () => {
                           </span>
                         </div>
                         <span>
-                          Submissions: {form.submissions.length || 'n/a'}
+                          Submissions: {form.submissions.length || '--'}
                         </span>
                       </li>
                     </Link>

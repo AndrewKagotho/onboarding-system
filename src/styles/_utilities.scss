@@ -7,9 +7,25 @@
 
 .subtext {
   font-size: 0.9rem;
-  padding: 0.5rem;
+  padding: variables.$padding;
   background-color: variables.$grey_light;
   border-radius: variables.$border_radius;
+}
+
+.subtext-flex {
+  display: flex;
+
+  > *:last-child {
+    margin-left: auto;
+  }
+}
+
+.subtext-green {
+  background-color: variables.$green_fade;
+}
+
+.subtext-blue {
+  background-color: variables.$blue_fade;
 }
 
 .bold {
@@ -27,13 +43,6 @@
 
 .submit-end {
   align-self: flex-end;
-}
-
-.highlight {
-  font-size: 0.9rem;
-  padding: 0.5rem;
-  background-color: variables.$green_fade;
-  border-radius: variables.$border_radius;
 }
 
 .badge {

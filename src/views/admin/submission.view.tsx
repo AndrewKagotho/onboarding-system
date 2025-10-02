@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { formatCalendarDate } from '../../utils/functions'
+import { formatCalendarDate, parseDateTime } from '../../utils/functions'
 
 export const SubmissionView: React.FC<{
   submission: Record<string, any>
@@ -21,6 +21,12 @@ export const SubmissionView: React.FC<{
         <h1 className='heading heading-thin'>{form.name}</h1>
         <p className='description'>{form.description}</p>
       </header>
+      <div className='subtext subtext-flex subtext-blue'>
+        <span>
+          Submission by: <em className='bold'>{submission.submittedBy.name}</em>
+        </span>
+        <span>{parseDateTime(submission.submittedOn)}</span>
+      </div>
       <form>
         {submission.sections.map(
           (section: Record<string, any>, index: number) => {
@@ -48,7 +54,7 @@ export const SubmissionView: React.FC<{
                         </p>
                         <div />
                         {question.answer ? (
-                          <span className='highlight'>
+                          <span className='subtext subtext-green'>
                             {question.type === 'file' ? (
                               <>
                                 <em className='bold'>File:</em>{' '}
