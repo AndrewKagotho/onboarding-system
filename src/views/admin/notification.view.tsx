@@ -23,7 +23,7 @@ export const NotificationView = () => {
   const getNotifications = async (id: any) =>
     setNotifications(await dispatch(fetchNotifications(id)).unwrap())
 
-  const handleSubmission = (submission: Record<string, any>) =>
+  const handleNotification = (submission: Record<string, any>) =>
     navigate(`/submission/${submission._id}`)
 
   return (
@@ -52,7 +52,7 @@ export const NotificationView = () => {
                 <li
                   className='subtext subtext-flex'
                   key={submission._id}
-                  onClick={() => handleSubmission(submission)}>
+                  onClick={() => handleNotification(submission)}>
                   <span>
                     <em className='bold'>NEW:</em>{' '}
                     <em className='bold'>
