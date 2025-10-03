@@ -48,21 +48,23 @@ export const UserDashboardView = () => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <main>
+        <>
           {authUser && <h1 className='banner'>Hello {authUser.name}...</h1>}
           <div className='main_content'>
             <div>
-              <header>
+              <header className='header-alt'>
                 <h1 className='heading heading-thin-2'>My forms</h1>
               </header>
-              <ul className='forms_list'>
+              <ul className='list'>
                 {forms.length ? (
                   taggedForms.map((form: Record<string, any>) => (
                     <Link to={handleClick(form)} key={form._id}>
                       <li className='card'>
                         <div>
                           <div className='card_title'>
-                            <span>{form.name}</span>
+                            <span>
+                              <em>{form.name}</em>
+                            </span>
                             <span
                               className={
                                 form.userSubmission
@@ -97,7 +99,7 @@ export const UserDashboardView = () => {
               </ul>
             </div>
           </div>
-        </main>
+        </>
       )}
     </>
   )

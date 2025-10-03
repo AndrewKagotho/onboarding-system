@@ -26,7 +26,7 @@ export const AdminDashboardView = () => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <main>
+        <>
           {authUser && <h1 className='banner'>Hello {authUser.name}...</h1>}
           <div className='main_content'>
             {authUser.notifications?.length ? (
@@ -49,17 +49,19 @@ export const AdminDashboardView = () => {
               New form
             </button>
             <div>
-              <header>
+              <header className='header-alt'>
                 <h1 className='heading heading-thin-2'>Forms</h1>
               </header>
-              <ul className='forms_list'>
+              <ul className='list'>
                 {forms.length ? (
                   forms.map((form: Record<string, any>) => (
                     <Link to={`/admin/form/${form._id}`} key={form._id}>
                       <li className='card'>
                         <div>
                           <div className='card_title'>
-                            <span>{form.name}</span>
+                            <span>
+                              <em>{form.name}</em>
+                            </span>
                             <span
                               className={
                                 form.active
@@ -94,7 +96,7 @@ export const AdminDashboardView = () => {
               </ul>
             </div>
           </div>
-        </main>
+        </>
       )}
     </>
   )

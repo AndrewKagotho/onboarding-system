@@ -1,14 +1,13 @@
 @use 'variables';
 
 .banner {
-  font-size: 2.2rem;
   font-weight: 100;
   margin-bottom: 3rem;
   color: variables.$grey_dark_semi;
 }
 
 .spinner {
-  height: 100vh;
+  height: calc(100vh - variables.$nav_height);
   display: flex;
   transform: rotate(240deg);
 

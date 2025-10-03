@@ -20,53 +20,58 @@ export const NotificationView = () => {
     // eslint-disable-next-line
   }, [])
 
-  const getNotifications = async (id: any) =>
-    setNotifications(await dispatch(fetchNotifications(id)).unwrap())
+  const getNotifications = async (id: any) => {
+    const notifications = await dispatch(fetchNotifications(id)).unwrap()
 
-  const handleNotification = (submission: Record<string, any>) =>
-    navigate(`/submission/${submission._id}`)
+    notifications.sort((a: Record<string, any>, b: Record<string, any>) => {
+      if (a.submittedOn > b.submittedOn) return -1
+      else if (a.submittedOn < b.submittedOn) return 1
+      return 0
+    })
+
+    setNotifications(notifications)
+  }
+
+  const handleNotification = ({ _id }: { _id: string }) =>
+    navigate(`/submission/${_id}`)
 
   return (
     <>
       {isLoading ? (
         <Spinner />
       ) : (
-        <main>
-          <div className='main_content'>
-            <button type='button' onClick={() => navigate('/admin')}>
-              Back to home
-            </button>
-            <div className='card'>
-              <div>
-                <div className='card_title'>
-                  <span className='heading-thin'>Notifications</span>
-                  <span className='badge-orange-icon'>{' ● '}</span>
-                  <span className='badge badge-orange'>
-                    {notifications.length}
-                  </span>
-                </div>
+        <div className='main_content'>
+          <button type='button' onClick={() => navigate('/admin')}>
+            Back to home
+          </button>
+          <div className='card card-alt'>
+            <div>
+              <div className='card_title'>
+                <span className='heading-thin'>Notifications</span>
+                <span className='badge-orange-icon'>{' ● '}</span>
+                <span className='badge badge-orange'>
+                  {notifications.length}
+                </span>
               </div>
             </div>
-            <ul className='list'>
-              {notifications.map((submission: any) => (
-                <li
-                  className='subtext subtext-flex'
-                  key={submission._id}
-                  onClick={() => handleNotification(submission)}>
-                  <span>
-                    <em className='bold'>NEW:</em>{' '}
-                    <em className='bold'>
-                      {submission.formId.name}
-                      {' - '}
-                      {submission.submittedBy.name}
-                    </em>
-                  </span>
-                  <span>{parseDateTime(submission.submittedOn)}</span>
-                </li>
-              ))}
-            </ul>
           </div>
-        </main>
+          <ul className='list'>
+            {notifications.map((submission: any) => (
+              <li
+                key={submission._id}
+                onClick={() => handleNotification(submission)}>
+                <span>
+                  <em className='uppercase'>New {submission.type}:</em>{' '}
+                  <em className='bold'>
+                    "{submission.formId.name}"{' - '}
+                    {submission.submittedBy.name}
+                  </em>
+                </span>
+                <span>{parseDateTime(submission.submittedOn)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </>
   )

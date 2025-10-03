@@ -11,6 +11,10 @@
   background-color: variables.$grey_light;
   border-radius: variables.$border_radius;
 
+  .span-a {
+    color: variables.$theme;
+  }
+
   &:has(.span-a) {
     cursor: pointer;
 
@@ -42,6 +46,10 @@
 
 .bold {
   font-weight: 600;
+}
+
+.uppercase {
+  text-transform: uppercase;
 }
 
 .submit {

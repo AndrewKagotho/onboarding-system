@@ -40,23 +40,21 @@ export const LoginView = () => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <main>
-          <div className='main_content'>
-            <h1 className='heading heading-thin'>Login</h1>
-            <form onSubmit={handleSubmit} className='login'>
-              <label htmlFor='email'>E-mail:</label>
-              <input id='email' onChange={handleChange} required />
-              <label htmlFor='password'>Password:</label>
-              <input
-                id='password'
-                type='password'
-                onChange={handleChange}
-                required
-              />
-              <button className='submit submit-end'>Log in</button>
-            </form>
-          </div>
-        </main>
+        <div className='main_content'>
+          <h1 className='heading heading-thin'>Onboarding System</h1>
+          <form onSubmit={handleSubmit} className='login'>
+            <label htmlFor='email'>E-mail:</label>
+            <input id='email' onChange={handleChange} required />
+            <label htmlFor='password'>Password:</label>
+            <input
+              id='password'
+              type='password'
+              onChange={handleChange}
+              required
+            />
+            <button className='submit submit-end'>Log in</button>
+          </form>
+        </div>
       )}
     </>
   )
