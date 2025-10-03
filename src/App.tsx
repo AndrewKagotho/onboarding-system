@@ -1,10 +1,12 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { LoginView } from './views/login.view'
 import { AdminDashboardView } from './views/admin/admin-dashboard.view'
+import { NotificationView } from './views/admin/notification.view'
 import { FormView } from './views/admin/form.view'
 import { NewFormView } from './views/admin/new-form.view'
 import { UserDashboardView } from './views/user/user-dashboard'
 import { SubmitFormView } from './views/user/submit-form.view'
+import { SubmissionView } from './views/admin/submission.view'
 
 const router = createBrowserRouter([
   {
@@ -15,6 +17,7 @@ const router = createBrowserRouter([
     path: 'admin',
     children: [
       { index: true, element: <AdminDashboardView /> },
+      { path: 'notifications/:id', element: <NotificationView /> },
       { path: 'form/:id', element: <FormView /> },
       { path: 'new-form', element: <NewFormView /> }
     ]
@@ -25,6 +28,10 @@ const router = createBrowserRouter([
       { index: true, element: <UserDashboardView /> },
       { path: 'submit-form/:id', element: <SubmitFormView /> }
     ]
+  },
+  {
+    path: '/submission/:id',
+    element: <SubmissionView />
   }
 ])
 

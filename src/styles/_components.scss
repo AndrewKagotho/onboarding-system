@@ -160,7 +160,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding: calc(variables.$mid_padding / 2) 0;
+    padding: calc(variables.$mid_padding / 2.3) 0;
     border-bottom: variables.$divider;
 
     .card_title {
@@ -196,12 +196,12 @@
       column-gap: 1rem;
       cursor: pointer;
 
-      span *:first-child {
+      span *:last-child {
         color: variables.$theme;
       }
 
       &:hover {
-        span em {
+        span em:last-of-type {
           text-decoration: underline;
           text-underline-offset: 3px;
         }

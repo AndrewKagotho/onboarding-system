@@ -187,7 +187,7 @@ export const NewFormView = () => {
     <main>
       <div className='main_content'>
         <button className='nav-back' onClick={() => navigate('/admin')}>
-          Back to forms
+          Back to home
         </button>
         <header>
           {isEditingHeader.name ? (

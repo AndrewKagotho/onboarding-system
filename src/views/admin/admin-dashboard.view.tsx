@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { fetchForms } from '../../store/form.slice'
@@ -9,9 +10,11 @@ export const AdminDashboardView = () => {
   const authState = useAppSelector((state) => state.auth)
   const formState = useAppSelector((state) => state.form)
 
+  const { data: authUser } = authState
   const { data: forms, isLoading } = formState
 
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(fetchForms())
@@ -24,13 +27,27 @@ export const AdminDashboardView = () => {
         <Spinner />
       ) : (
         <main>
-          {authState.data && (
-            <h1 className='banner'>Hello {authState.data.name}...</h1>
-          )}
+          {authUser && <h1 className='banner'>Hello {authUser.name}...</h1>}
           <div className='main_content'>
-            <Link to='/admin/new-form' className='style_button'>
+            {authUser.notifications?.length ? (
+              <div
+                className='subtext subtext-flex subtext-blue'
+                onClick={() => {
+                  navigate(`/admin/notifications/${authUser._id}`)
+                }}>
+                <span className='bold'>
+                  NOTIFICATIONS: {authUser.notifications.length}
+                </span>
+                <span className='span-a'>View</span>
+              </div>
+            ) : (
+              <span className='subtext'>NO NEW NOTIFICATIONS...</span>
+            )}
+            <button
+              className='submit-end'
+              onClick={() => navigate('/admin/new-form')}>
               New form
-            </Link>
+            </button>
             <div>
               <header>
                 <h1 className='heading heading-thin-2'>Forms</h1>

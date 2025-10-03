@@ -106,7 +106,7 @@ export const SubmitFormView = () => {
             {isFillingForm ? (
               <>
                 <button className='nav-back' onClick={() => navigate('/user')}>
-                  Back to forms
+                  Back to home
                 </button>
                 <header>
                   <h1 className='heading heading-thin'>{form.name}</h1>

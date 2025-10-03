@@ -43,7 +43,7 @@ export const fetchSubmission = createAsyncThunk(
   async (id: string) => {
     try {
       const { data } = await SubmissionService.getOne(id)
-      return data.submission
+      return data
     } catch (error) {
       return Promise.reject(error)
     }

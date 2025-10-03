@@ -35,14 +35,18 @@ main {
   }
 }
 
+h1 {
+  font-weight: 500;
+}
+
 h1,
 .header_input {
   font-size: 2rem;
-  font-weight: 500;
 }
 
 .header_input {
   line-height: 1;
+  font-weight: 100;
 }
 
 h2 {
@@ -54,8 +58,7 @@ h3 {
   font-weight: 500;
 }
 
-button,
-a.style_button {
+button {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: variables.$border_radius;
@@ -71,6 +74,11 @@ a.style_button {
 
 a {
   color: variables.$grey_dark;
+  text-decoration: none;
+}
+
+.span-a {
+  color: variables.$theme;
   text-decoration: none;
 }
 
