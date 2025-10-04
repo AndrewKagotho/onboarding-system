@@ -1,4 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { RootState } from '.'
+import { addSubmission } from './auth.slice'
 import { SubmissionService } from '../services/submission.service'
 import type { InitialStateType } from '../utils/types'
 
@@ -52,10 +54,19 @@ export const fetchSubmission = createAsyncThunk(
 
 export const createSubmission = createAsyncThunk(
   'submissions/create',
-  async (submission: Record<string, any>) => {
+  async (submission: Record<string, any>, { getState, dispatch }) => {
     try {
       const { data } = await SubmissionService.create(submission)
-      return data
+
+      const state = getState() as RootState
+      let submissionState = state.auth.data.submissions
+
+      submissionState = [
+        ...submissionState,
+        { formId: data.formId, submissionId: data._id }
+      ]
+
+      dispatch(addSubmission(submissionState))
     } catch (error) {
       return Promise.reject(error)
     }
