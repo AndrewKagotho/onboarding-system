@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks'
-import { fetchForms } from '../../store/form.slice'
+import { fetchPublishedForms } from '../../store/form.slice'
 import { Spinner } from '../../components/spinner'
 import { parseDate } from '../../utils/functions'
 
@@ -13,6 +13,8 @@ export const UserDashboardView = () => {
 
   const { data: authUser } = authState
   const { data: forms, isLoading } = formState
+
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     const allForms: Record<string, any>[] = []
@@ -31,10 +33,8 @@ export const UserDashboardView = () => {
     // eslint-disable-next-line
   }, [forms])
 
-  const dispatch = useAppDispatch()
-
   useEffect(() => {
-    dispatch(fetchForms())
+    dispatch(fetchPublishedForms())
     // eslint-disable-next-line
   }, [])
 

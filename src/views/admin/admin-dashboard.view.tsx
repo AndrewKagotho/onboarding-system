@@ -64,7 +64,7 @@ export const AdminDashboardView = () => {
                             </span>
                             <span
                               className={
-                                form.active
+                                form.publishedOn
                                   ? 'badge-green-icon'
                                   : 'badge-grey-icon'
                               }>
@@ -73,9 +73,11 @@ export const AdminDashboardView = () => {
                             <span
                               className={
                                 'badge ' +
-                                (form.active ? 'badge-green' : 'badge-grey')
+                                (form.publishedOn
+                                  ? 'badge-green'
+                                  : 'badge-grey')
                               }>
-                              {form.active ? 'live' : 'offline'}
+                              {form.publishedOn ? 'live' : 'offline'}
                             </span>
                           </div>
                           <span>

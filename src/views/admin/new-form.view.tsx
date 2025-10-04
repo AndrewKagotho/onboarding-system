@@ -31,6 +31,9 @@ export const NewFormView = () => {
     }
   }
 
+  const handleFormCheckbox = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm({ ...form, [e.target.id]: e.target.checked })
+
   const handleNewSectionChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     (newSection[e.target.id] = e.target.value)
 
@@ -176,7 +179,6 @@ export const NewFormView = () => {
 
     try {
       await dispatch(createForm(form))
-      alert('Form added!')
       navigate('/admin')
     } catch (error) {
       alert(`Error:, ${error}`)
@@ -538,8 +540,20 @@ export const NewFormView = () => {
         ) : (
           <button onClick={() => setIsAddingSection(true)}>New section</button>
         )}
+        <div>
+          <div className='checkbox_container'>
+            <div>
+              <input
+                id='publish'
+                type='checkbox'
+                onChange={handleFormCheckbox}
+              />
+              <label htmlFor='publish'>Publish</label>
+            </div>
+          </div>
+        </div>
         <button className='submit' disabled={!allQuestions.length}>
-          Save
+          Create form
         </button>
       </form>
     </div>

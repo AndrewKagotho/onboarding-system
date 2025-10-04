@@ -57,9 +57,20 @@ export const NotificationView = () => {
             <div>
               <div className='card_title'>
                 <span className='heading-thin'>Notifications</span>
-                <span className='badge-orange-icon'>{' ● '}</span>
-                <span className='badge badge-orange'>
-                  {notifications.length}
+                <span
+                  className={
+                    notifications.length
+                      ? 'badge-orange-icon'
+                      : 'badge-grey-icon'
+                  }>
+                  {' ● '}
+                </span>
+                <span
+                  className={
+                    'badge ' +
+                    (notifications.length ? 'badge-orange' : 'badge-grey')
+                  }>
+                  {notifications.length || 'NONE'}
                 </span>
               </div>
             </div>

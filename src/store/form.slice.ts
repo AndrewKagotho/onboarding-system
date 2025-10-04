@@ -25,6 +25,18 @@ const formSlice = createSlice({
       state.isLoading = false
       state.error = action.error.message
     })
+    builder.addCase(fetchPublishedForms.pending, (state) => {
+      state.isLoading = true
+    })
+    builder.addCase(fetchPublishedForms.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.data = action.payload ?? []
+      state.error = null
+    })
+    builder.addCase(fetchPublishedForms.rejected, (state, action) => {
+      state.isLoading = false
+      state.error = action.error.message
+    })
     builder.addCase(fetchForm.pending, (state) => {
       state.isLoading = true
     })
@@ -59,6 +71,18 @@ export const fetchForms = createAsyncThunk('forms/fetch', async () => {
   }
 })
 
+export const fetchPublishedForms = createAsyncThunk(
+  'forms/fetch-published',
+  async () => {
+    try {
+      const { data } = await FormService.getAllPublished()
+      return data
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  }
+)
+
 export const fetchForm = createAsyncThunk(
   'forms/fetch-one',
   async (id: string) => {
@@ -77,6 +101,17 @@ export const createForm = createAsyncThunk(
     try {
       const { data } = await FormService.create(newForm)
       return data
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  }
+)
+
+export const publishForm = createAsyncThunk(
+  'forms/create',
+  async (args: { id: string; isPublished: boolean }) => {
+    try {
+      await FormService.publish(args)
     } catch (error) {
       return Promise.reject(error)
     }

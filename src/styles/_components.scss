@@ -27,10 +27,6 @@
     border-bottom: 1px solid variables.$grey;
     display: flex;
     flex-direction: column;
-
-    h1 {
-      font-size: 1.7rem;
-    }
   }
 
   .header-alt {
@@ -60,6 +56,18 @@
     color: variables.$grey_dark;
     display: inline-block;
     margin-top: 0.4rem;
+  }
+
+  .checkbox_container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+
+    > div {
+      cursor: pointer;
+      display: flex;
+      column-gap: 0.8rem;
+    }
   }
 
   section {
