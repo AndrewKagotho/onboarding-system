@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { useAppDispatch, useAppSelector } from '../../hooks'
-import { fetchNotifications } from '../../store/user.slice'
-import { parseDateTime } from '../../utils/functions'
+import { fetchNotifications, removeNotification } from '../../store/user.slice'
 import { Spinner } from '../../components/spinner'
+import { parseDateTime } from '../../utils/functions'
 
 export const NotificationView = () => {
   const [notifications, setNotifications] = useState<Record<string, any>[]>([])
@@ -12,6 +12,8 @@ export const NotificationView = () => {
   const navigate = useNavigate()
   const { id } = useParams()
 
+  const authState = useAppSelector((state) => state.auth)
+  const { data: authUser } = authState
   const userState = useAppSelector((state) => state.user)
   const { isLoading } = userState
 
@@ -32,8 +34,15 @@ export const NotificationView = () => {
     setNotifications(notifications)
   }
 
-  const handleNotification = ({ _id }: { _id: string }) =>
+  const handleNotification = ({ _id }: { _id: string }) => {
     navigate(`/submission/${_id}`)
+    dispatch(
+      removeNotification({
+        userId: authUser._id,
+        submissionId: _id
+      })
+    )
+  }
 
   return (
     <>
@@ -55,22 +64,26 @@ export const NotificationView = () => {
               </div>
             </div>
           </div>
-          <ul className='list'>
-            {notifications.map((submission: any) => (
-              <li
-                key={submission._id}
-                onClick={() => handleNotification(submission)}>
-                <span>
-                  <em className='uppercase'>New {submission.type}:</em>{' '}
-                  <em className='bold'>
-                    "{submission.formId.name}"{' - '}
-                    {submission.submittedBy.name}
-                  </em>
-                </span>
-                <span>{parseDateTime(submission.submittedOn)}</span>
-              </li>
-            ))}
-          </ul>
+          {notifications.length ? (
+            <ul className='list'>
+              {notifications.map((submission: any) => (
+                <li
+                  key={submission._id}
+                  onClick={() => handleNotification(submission)}>
+                  <span>
+                    <em className='uppercase'>New {submission.type}:</em>{' '}
+                    <em className='bold'>
+                      "{submission.formId.name}"{' - '}
+                      {submission.submittedBy.name}
+                    </em>
+                  </span>
+                  <span>{parseDateTime(submission.submittedOn)}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <span className='subtext'>No new notifications...</span>
+          )}
         </div>
       )}
     </>

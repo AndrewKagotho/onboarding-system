@@ -38,7 +38,7 @@ export const SubmissionView = () => {
           </header>
           <div className='subtext subtext-flex subtext-blue'>
             <span>
-              Submission by:{' '}
+              Submitted by:{' '}
               <em className='bold'>{submission.submittedBy?.name}</em>
             </span>
             <span>{parseDateTime(submission.submittedOn)}</span>

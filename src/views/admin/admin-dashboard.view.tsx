@@ -36,12 +36,12 @@ export const AdminDashboardView = () => {
                   navigate(`/admin/notifications/${authUser._id}`)
                 }}>
                 <span className='bold'>
-                  NOTIFICATIONS: {authUser.notifications.length}
+                  New notifications: {authUser.notifications.length}
                 </span>
                 <span className='span-a'>View</span>
               </div>
             ) : (
-              <span className='subtext'>NO NEW NOTIFICATIONS...</span>
+              <span className='subtext'>No new notifications...</span>
             )}
             <button
               className='submit-end'

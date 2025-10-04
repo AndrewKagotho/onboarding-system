@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import type { InitialStateType } from '../utils/types'
+import { RootState } from '.'
+import { removeNotification as removeNotificationState } from './auth.slice'
 import { UserService } from '../services/user.service'
+import type { InitialStateType } from '../utils/types'
 
 const initialState: InitialStateType = {
   isLoading: false,
@@ -16,7 +18,7 @@ const userSlice = createSlice({
     builder.addCase(fetchNotifications.pending, (state) => {
       state.isLoading = true
     })
-    builder.addCase(fetchNotifications.fulfilled, (state, action) => {
+    builder.addCase(fetchNotifications.fulfilled, (state) => {
       state.isLoading = false
       state.error = null
     })
@@ -33,6 +35,29 @@ export const fetchNotifications = createAsyncThunk(
     try {
       const { data } = await UserService.getNotifications(id)
       return data
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  }
+)
+
+export const removeNotification = createAsyncThunk(
+  'user/remove-notification',
+  async (
+    { userId, submissionId }: { userId: string; submissionId: string },
+    { getState, dispatch }
+  ) => {
+    try {
+      await UserService.removeNotification({ userId, submissionId })
+
+      const state = getState() as RootState
+      let notificationsState = state.auth.data.notifications
+
+      notificationsState = notificationsState?.filter(
+        ({ refId }: { refId: string }) => refId !== submissionId
+      )
+
+      dispatch(removeNotificationState(notificationsState))
     } catch (error) {
       return Promise.reject(error)
     }

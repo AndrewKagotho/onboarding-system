@@ -17,6 +17,9 @@ const authSlice = createSlice({
     },
     clearAuthState: (state) => {
       state.data = null
+    },
+    removeNotification: (state, data) => {
+      state.data.notifications = data.payload
     }
   },
   extraReducers: (builder) => {
@@ -73,4 +76,5 @@ export const fetchAuthUser = createAsyncThunk(
 )
 
 export const { reducer: authReducer } = authSlice
-export const { setAuthState, clearAuthState } = authSlice.actions
+export const { setAuthState, clearAuthState, removeNotification } =
+  authSlice.actions
