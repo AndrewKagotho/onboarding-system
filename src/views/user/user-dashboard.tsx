@@ -86,15 +86,16 @@ export const UserDashboardView = () => {
                           <span>{form.description}</span>
                         </div>
                         <span>
-                          {form.updatedOn
+                          {/* {form.updatedOn
                             ? `Last modified: ${parseDate(form.updatedOn)}`
-                            : `Created: ${parseDate(form.createdOn)}`}
+                            : `Created: ${parseDate(form.createdOn)}`} */}
+                          Created: {parseDate(form.createdOn)}
                         </span>
                       </li>
                     </Link>
                   ))
                 ) : (
-                  <span>No documents.</span>
+                  <span>No results.</span>
                 )}
               </ul>
             </div>

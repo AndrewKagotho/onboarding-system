@@ -70,7 +70,7 @@ export const ReviewFormView: React.FC<{
                         </p>
                         <div />
                         {question.answer ? (
-                          <span className='subtext subtext-green'>
+                          <span className='highlight highlight-green'>
                             {question.type === 'file' ? (
                               <>
                                 <em className='bold'>File:</em>{' '}

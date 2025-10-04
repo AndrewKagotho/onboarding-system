@@ -36,7 +36,7 @@ export const SubmissionView = () => {
             <h1 className='heading heading-thin'>{submission.formId?.name}</h1>
             <p className='description'>{submission.formId?.description}</p>
           </header>
-          <div className='subtext subtext-flex subtext-blue'>
+          <div className='highlight highlight-flex highlight-blue'>
             <span>
               Submitted by:{' '}
               <em className='bold'>{submission.submittedBy?.name}</em>
@@ -70,7 +70,7 @@ export const SubmissionView = () => {
                             </p>
                             <div />
                             {question.answer ? (
-                              <span className='subtext subtext-green'>
+                              <span className='highlight highlight-green'>
                                 {question.type === 'file' ? (
                                   <>
                                     <em className='bold'>File:</em>{' '}

@@ -70,6 +70,13 @@
     }
   }
 
+  .checkbox_container-alt {
+    display: grid;
+    grid-template-columns: 1rem 13rem;
+    column-gap: 0.5rem;
+    row-gap: 0;
+  }
+
   section {
     display: flex;
     flex-direction: column;
@@ -213,6 +220,16 @@
           text-underline-offset: 3px;
         }
       }
+    }
+  }
+
+  .form_view-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .span-a {
+      color: variables.$theme;
     }
   }
 }

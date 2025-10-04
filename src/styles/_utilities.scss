@@ -6,6 +6,10 @@
 }
 
 .subtext {
+  font-size: 0.85rem;
+}
+
+.highlight {
   font-size: 0.9rem;
   padding: variables.$padding;
   background-color: variables.$grey_light;
@@ -27,7 +31,7 @@
   }
 }
 
-.subtext-flex {
+.highlight-flex {
   display: flex;
 
   > *:last-child {
@@ -36,11 +40,11 @@
   }
 }
 
-.subtext-green {
+.highlight-green {
   background-color: variables.$green_fade;
 }
 
-.subtext-blue {
+.highlight-blue {
   background-color: variables.$blue_fade;
 }
 

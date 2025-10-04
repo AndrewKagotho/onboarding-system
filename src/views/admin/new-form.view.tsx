@@ -4,17 +4,25 @@ import { useAppDispatch } from '../../hooks'
 import { createForm } from '../../store/form.slice'
 import { QUESTION_TYPES } from '../../utils/constants'
 
-export const NewFormView = () => {
+export const NewFormView: React.FC<{
+  form?: Record<string, any>
+  setIsAddingForm: React.Dispatch<React.SetStateAction<boolean>>
+}> = (props) => {
+  const { form: existingForm, setIsAddingForm } = props
+
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const [isAddingSection, setIsAddingSection] = useState(false)
   const [editingSections, setEditingSections] = useState<string[]>([])
-  const [form, setForm] = useState<Record<string, any>>({
-    name: 'Untitled form',
-    description: 'Add description...',
-    sections: []
-  })
+  const [form, setForm] = useState<Record<string, any>>(
+    () =>
+      existingForm ?? {
+        name: 'Untitled form',
+        description: 'Add description...',
+        sections: []
+      }
+  )
   const [isEditingHeader, setIsEditingHeader] = useState({
     name: false,
     description: false
@@ -187,8 +195,8 @@ export const NewFormView = () => {
 
   return (
     <div className='main_content'>
-      <button className='nav-back' onClick={() => navigate('/admin')}>
-        Back to home
+      <button className='nav-back' onClick={() => setIsAddingForm(false)}>
+        Back
       </button>
       <header>
         {isEditingHeader.name ? (
@@ -300,7 +308,7 @@ export const NewFormView = () => {
                         {question.conditional && (
                           <>
                             <div />
-                            <span className='subtext'>
+                            <span className='highlight'>
                               {`Condition: Show if value of `}{' '}
                               <em className='bold'>{`"${
                                 findQuestion(question.conditional.questionId)
@@ -500,9 +508,13 @@ export const NewFormView = () => {
                   </div>
                 </div>
               ) : (
-                <button onClick={() => handleAddQuestion(section.id)}>
-                  New question
-                </button>
+                <>
+                  {!existingForm && (
+                    <button onClick={() => handleAddQuestion(section.id)}>
+                      New question
+                    </button>
+                  )}
+                </>
               )}
             </section>
           )
@@ -538,23 +550,33 @@ export const NewFormView = () => {
             </div>
           </section>
         ) : (
-          <button onClick={() => setIsAddingSection(true)}>New section</button>
+          <>
+            {!existingForm && (
+              <button onClick={() => setIsAddingSection(true)}>
+                New section
+              </button>
+            )}
+          </>
         )}
-        <div>
-          <div className='checkbox_container'>
+        {!existingForm && (
+          <>
             <div>
-              <input
-                id='publish'
-                type='checkbox'
-                onChange={handleFormCheckbox}
-              />
-              <label htmlFor='publish'>Publish</label>
+              <div className='checkbox_container'>
+                <div>
+                  <input
+                    id='publish'
+                    type='checkbox'
+                    onChange={handleFormCheckbox}
+                  />
+                  <label htmlFor='publish'>Publish</label>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <button className='submit' disabled={!allQuestions.length}>
-          Create form
-        </button>
+            <button className='submit' disabled={!allQuestions.length}>
+              Create form
+            </button>
+          </>
+        )}
       </form>
     </div>
   )

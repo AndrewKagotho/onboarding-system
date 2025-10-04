@@ -93,7 +93,7 @@ export const NotificationView = () => {
               ))}
             </ul>
           ) : (
-            <span className='subtext'>No new notifications...</span>
+            <span className='highlight'>No new notifications...</span>
           )}
         </div>
       )}
