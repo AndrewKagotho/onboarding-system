@@ -56,6 +56,15 @@
   text-transform: uppercase;
 }
 
+.underline {
+  color: variables.$theme;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
 .submit {
   background-color: variables.$green;
   align-self: stretch;

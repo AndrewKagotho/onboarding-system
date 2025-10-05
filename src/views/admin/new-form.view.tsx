@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router'
 import { useAppDispatch } from '../../hooks'
 import { createForm } from '../../store/form.slice'
 import { QUESTION_TYPES } from '../../utils/constants'
@@ -11,7 +10,6 @@ export const NewFormView: React.FC<{
   const { form: existingForm, setIsAddingForm } = props
 
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
 
   const [isAddingSection, setIsAddingSection] = useState(false)
   const [editingSections, setEditingSections] = useState<string[]>([])
@@ -187,7 +185,7 @@ export const NewFormView: React.FC<{
 
     try {
       await dispatch(createForm(form))
-      navigate('/admin')
+      setIsAddingForm(false)
     } catch (error) {
       alert(`Error:, ${error}`)
     }
@@ -329,7 +327,7 @@ export const NewFormView: React.FC<{
                 )}
               {editingSections.includes(section.id) ? (
                 <div className='section-new_item'>
-                  <h2 className='heading-thin-2'>New question</h2>
+                  <h3 className='heading-thin-2'>New question</h3>
                   <div>
                     <label htmlFor='statement'>Question:</label>
                     <input
@@ -432,7 +430,7 @@ export const NewFormView: React.FC<{
                         </div>
                       </div>
                     )}
-                    <h3>Rules:</h3>
+                    <span>Rules:</span>
                     <div className='checkbox_container'>
                       <div>
                         <input
@@ -522,7 +520,7 @@ export const NewFormView: React.FC<{
         {isAddingSection ? (
           <section>
             <div className='section-new_item'>
-              <h2 className='heading-thin-2'>New section</h2>
+              <h3 className='heading-thin-2'>New section</h3>
               <div>
                 <label htmlFor='name'>Name:</label>
                 <input

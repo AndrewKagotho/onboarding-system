@@ -7,9 +7,10 @@ import { formatCalendarDate } from '../../utils/functions'
 export const ReviewFormView: React.FC<{
   submission: Record<string, any>
   form: Record<string, any>
+  filesData?: Record<string, any>[]
   setIsFillingForm: React.Dispatch<React.SetStateAction<boolean>>
 }> = (props) => {
-  const { submission, form, setIsFillingForm } = props
+  const { submission, form, filesData, setIsFillingForm } = props
 
   const authState = useAppSelector((state) => state.auth)
   const { data: authUser } = authState
@@ -26,7 +27,11 @@ export const ReviewFormView: React.FC<{
 
     try {
       await dispatch(
-        createSubmission({ ...submission, supa_uid: authUser.supa_uid })
+        createSubmission({
+          ...submission,
+          filesData,
+          supa_uid: authUser.supa_uid
+        })
       )
       navigate('/user')
     } catch (error) {
@@ -74,7 +79,9 @@ export const ReviewFormView: React.FC<{
                             {question.type === 'file' ? (
                               <>
                                 <em className='bold'>File:</em>{' '}
-                                {question.answer.name}
+                                {typeof question.answer === 'string'
+                                  ? question.answer
+                                  : question.answer.path}
                               </>
                             ) : (
                               <>

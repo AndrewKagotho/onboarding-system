@@ -74,7 +74,13 @@ export const SubmissionView = () => {
                                 {question.type === 'file' ? (
                                   <>
                                     <em className='bold'>File:</em>{' '}
-                                    {question.answer.name}
+                                    <a
+                                      href={`https://aepgyfqrpuxxfqpyofhd.supabase.co/storage/v1/object/public/${question.answer.fullPath}`}
+                                      className='underline'
+                                      target='_blank'
+                                      rel='noreferrer'>
+                                      {question.answer.path}
+                                    </a>
                                   </>
                                 ) : (
                                   <>

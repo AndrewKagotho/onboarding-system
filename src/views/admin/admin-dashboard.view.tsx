@@ -22,7 +22,7 @@ export const AdminDashboardView = () => {
   useEffect(() => {
     dispatch(fetchForms())
     // eslint-disable-next-line
-  }, [])
+  }, [isAddingForm])
 
   return (
     <>

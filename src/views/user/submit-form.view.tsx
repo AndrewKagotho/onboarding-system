@@ -18,6 +18,7 @@ export const SubmitFormView = () => {
   const [form, setForm] = useState<Record<string, any>>({})
   const [submission, setSubmission] = useState<Record<string, any>>({})
   const [answer, setAnswer] = useState({})
+  const [filesData, setFilesData] = useState<Record<string, any>[]>([])
   const [allQuestions, setAllQuestions] = useState<Record<string, any>[]>([])
   const [allCheckboxes] = useState(new Map())
   const [isFillingForm, setIsFillingForm] = useState(true)
@@ -58,7 +59,41 @@ export const SubmitFormView = () => {
       : allCheckboxes.set(questionId, new Set().add(e.target.id))
   }
 
-  const handleFileChange = (e: any) => setAnswer(e.target.files[0])
+  const handleFileChange = (
+    e: any,
+    question: Record<string, any>,
+    sectionId: string
+  ) => {
+    const file = e.target.files[0]
+
+    // Update submissions
+    const allSections = [...submission.sections]
+    const sectionIndex = allSections.findIndex(
+      (section: Record<string, any>) => section.id === sectionId
+    )
+    const questionIndex = allSections[sectionIndex].questions.findIndex(
+      ({ id }: Record<string, any>) => id === question.id
+    )
+
+    allSections[sectionIndex].questions[questionIndex].answer = file.name
+    setSubmission({
+      ...submission,
+      sections: allSections
+    })
+
+    // Handle file data
+    setFilesData((filesData) => {
+      const newFile = {
+        questionId: question.id,
+        name: file.name,
+        file: new FormData()
+      }
+
+      newFile.file.append(newFile.name, file)
+
+      return [...filesData, newFile]
+    })
+  }
 
   const saveAnswer = (
     sectionId: Record<string, any>,
@@ -242,9 +277,12 @@ export const SubmitFormView = () => {
                                   question.type === 'file' && (
                                     <input
                                       type='file'
-                                      onChange={handleFileChange}
-                                      onBlur={() =>
-                                        saveAnswer(section.id, question)
+                                      onChange={(e) =>
+                                        handleFileChange(
+                                          e,
+                                          question,
+                                          section.id
+                                        )
                                       }
                                       required={question.required}
                                     />
@@ -265,6 +303,7 @@ export const SubmitFormView = () => {
             <ReviewFormView
               submission={submission}
               form={form}
+              filesData={filesData}
               setIsFillingForm={setIsFillingForm}
             />
           )}
