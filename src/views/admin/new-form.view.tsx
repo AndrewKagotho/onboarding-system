@@ -32,14 +32,10 @@ export const NewFormView: React.FC<{
   const [checkboxValue, setCheckboxValue] = useState('')
 
   useEffect(() => {
-    const allQuestions = form.sections?.filter(
-      (section: Record<string, any> | null) => section
+    const allQuestions = form.sections?.flatMap(
+      (section: Record<string, any>) => section.questions
     )
-
-    if (allQuestions) {
-      allQuestions.flatMap((section: Record<string, any>) => section.questions)
-      setAllQuestions(allQuestions)
-    }
+    setAllQuestions(allQuestions)
   }, [form])
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
