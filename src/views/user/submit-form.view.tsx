@@ -31,10 +31,14 @@ export const SubmitFormView = () => {
   useEffect(() => {
     setSubmission({ ...submission, formId: form._id, sections: form.sections })
 
-    const allQuestions = form.sections?.flatMap(
-      (section: Record<string, any>) => section.questions
+    const allQuestions = form.sections?.filter(
+      (section: Record<string, any> | null) => section
     )
-    setAllQuestions(allQuestions)
+
+    if (allQuestions) {
+      allQuestions.flatMap((section: Record<string, any>) => section.questions)
+      setAllQuestions(allQuestions)
+    }
     // eslint-disable-next-line
   }, [form])
 

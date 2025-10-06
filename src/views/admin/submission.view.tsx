@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { fetchSubmission } from '../../store/submission.slice'
@@ -7,6 +7,7 @@ import { formatCalendarDate, parseDateTime } from '../../utils/functions'
 
 export const SubmissionView = () => {
   const [submission, setSubmission] = useState<Record<string, any>>({})
+  const [allQuestions, setAllQuestions] = useState<Record<string, any>[]>([])
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -20,8 +21,23 @@ export const SubmissionView = () => {
     // eslint-disable-next-line
   }, [])
 
+  useEffect(() => {
+    const allQuestions = submission.sections?.filter(
+      (section: Record<string, any> | null) => section
+    )
+
+    if (allQuestions) {
+      allQuestions.flatMap((section: Record<string, any>) => section.questions)
+      setAllQuestions(allQuestions)
+    }
+    // eslint-disable-next-line
+  }, [submission])
+
   const getSubmission = async (id: any) =>
     setSubmission(await dispatch(fetchSubmission(id)).unwrap())
+
+  const findQuestion = (questionId: string) =>
+    allQuestions?.find(({ id }) => id === questionId)
 
   return (
     <>
@@ -56,6 +72,27 @@ export const SubmissionView = () => {
                     </div>
                     {section.questions.map(
                       (question: Record<string, any>, index: number) => {
+                        if (question.conditional) {
+                          const { questionId, condition, value } =
+                            question.conditional
+
+                          const dependencyQuestion = findQuestion(questionId)
+
+                          if (dependencyQuestion) {
+                            if (
+                              condition === '>' &&
+                              !(dependencyQuestion.answer > Number(value))
+                            ) {
+                              return <Fragment key={index}></Fragment>
+                            } else if (
+                              condition === '<' &&
+                              !(dependencyQuestion.answer < Number(value))
+                            ) {
+                              return <Fragment key={index}></Fragment>
+                            }
+                          }
+                        }
+
                         return (
                           <div className='section_question' key={index}>
                             <span>{index + 1}.</span>

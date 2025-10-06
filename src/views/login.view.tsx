@@ -30,8 +30,8 @@ export const LoginView = () => {
       } else if (role === 'user') {
         navigate('/user')
       }
-    } catch (error) {
-      alert(`Error:, ${error}`)
+    } catch (error: any) {
+      alert(error.message)
     }
   }
 

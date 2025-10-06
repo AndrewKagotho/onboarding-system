@@ -12,7 +12,7 @@
 .highlight {
   font-size: 0.9rem;
   padding: variables.$padding;
-  background-color: variables.$grey_light;
+  background-color: variables.$grey_light_mid;
   border-radius: variables.$border_radius;
 
   .span-a {
@@ -54,6 +54,10 @@
 
 .uppercase {
   text-transform: uppercase;
+}
+
+.capitalize {
+  text-transform: capitalize;
 }
 
 .underline {

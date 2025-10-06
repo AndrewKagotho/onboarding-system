@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAppDispatch } from '../../hooks'
 import { createForm } from '../../store/form.slice'
 import { QUESTION_TYPES } from '../../utils/constants'
@@ -30,6 +30,17 @@ export const NewFormView: React.FC<{
   const [allQuestions, setAllQuestions] = useState<Record<string, any>[]>([])
   const [dropdownValue, setDropdownValue] = useState('')
   const [checkboxValue, setCheckboxValue] = useState('')
+
+  useEffect(() => {
+    const allQuestions = form.sections?.filter(
+      (section: Record<string, any> | null) => section
+    )
+
+    if (allQuestions) {
+      allQuestions.flatMap((section: Record<string, any>) => section.questions)
+      setAllQuestions(allQuestions)
+    }
+  }, [form])
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) {
@@ -141,40 +152,54 @@ export const NewFormView: React.FC<{
     })
 
   const saveSection = () => {
-    setIsAddingSection(false)
-    newSection.id = `SID_${Date.now()}`
+    if (newSection.name) {
+      setIsAddingSection(false)
+      newSection.id = `SID_${Date.now()}`
 
-    setForm((form) => ({
-      ...form,
-      sections: [...form.sections, newSection]
-    }))
+      setForm((form) => ({
+        ...form,
+        sections: [...form.sections, newSection]
+      }))
+    } else {
+      alert('Missing section name...')
+    }
   }
 
   const saveQuestion = (sectionId: string) => {
-    if (newQuestion.type === 'dropdown' && !newQuestion.meta?.dropdownOptions) {
-      alert('Dropdown options missing!')
-      return
+    if (newQuestion.statement) {
+      if (
+        newQuestion.type === 'dropdown' &&
+        !newQuestion.meta?.dropdownOptions
+      ) {
+        alert('Dropdown options missing!')
+        return
+      }
+
+      if (
+        newQuestion.type === 'checkbox' &&
+        !newQuestion.meta?.checkboxOptions
+      ) {
+        alert('Checkbox options missing!')
+        return
+      }
+
+      setForm((form) => {
+        const sectionIndex = form.sections.findIndex(
+          (section: Record<string, string>) => section.id === sectionId
+        )
+        form.sections[sectionIndex].questions = form.sections[sectionIndex]
+          .questions
+          ? [...form.sections[sectionIndex].questions, newQuestion]
+          : [newQuestion]
+
+        return form
+      })
+
+      setAllQuestions([...allQuestions, newQuestion])
+      handleCancelQuestion(sectionId)
+    } else {
+      alert('Missing question / statement...')
     }
-
-    if (newQuestion.type === 'checkbox' && !newQuestion.meta?.checkboxOptions) {
-      alert('Checkbox options missing!')
-      return
-    }
-
-    setForm((form) => {
-      const sectionIndex = form.sections.findIndex(
-        (section: Record<string, string>) => section.id === sectionId
-      )
-      form.sections[sectionIndex].questions = form.sections[sectionIndex]
-        .questions
-        ? [...form.sections[sectionIndex].questions, newQuestion]
-        : [newQuestion]
-
-      return form
-    })
-
-    setAllQuestions([...allQuestions, newQuestion])
-    handleCancelQuestion(sectionId)
   }
 
   const findQuestion = (questionId: string) =>
@@ -197,7 +222,7 @@ export const NewFormView: React.FC<{
         Back
       </button>
       <header>
-        {isEditingHeader.name ? (
+        {!existingForm && isEditingHeader.name ? (
           <input
             id='name'
             defaultValue={form.name}
@@ -219,7 +244,7 @@ export const NewFormView: React.FC<{
             {form.name}
           </h1>
         )}
-        {isEditingHeader.description ? (
+        {!existingForm && isEditingHeader.description ? (
           <input
             id='description'
             defaultValue={form.description}
@@ -332,20 +357,21 @@ export const NewFormView: React.FC<{
                     <label htmlFor='statement'>Question:</label>
                     <input
                       id='statement'
-                      placeholder='Enter question...'
+                      placeholder='Enter question / statement...'
                       onChange={handleNewQuestionChange}
                     />
                     <label htmlFor='description'>Description:</label>
                     <input
                       id='description'
-                      placeholder='Provide description (Optional)...'
+                      placeholder='Brief description (optional)...'
                       onChange={handleNewQuestionChange}
                     />
                     <label htmlFor='type'>Field type:</label>
                     <select
                       id='type'
                       value={newQuestion.type}
-                      onChange={handleNewQuestionChange}>
+                      onChange={handleNewQuestionChange}
+                      className='capitalize'>
                       {QUESTION_TYPES.map((type, index) => (
                         <option value={type} key={index}>
                           {type}
@@ -460,9 +486,12 @@ export const NewFormView: React.FC<{
                               Select from list...
                             </option>
                             {allQuestions
-                              .filter(({ type }) => type === 'number')
+                              .filter(({ type }) => type)
                               .map((question, index) => (
-                                <option value={question.id} key={index}>
+                                <option
+                                  value={question.id}
+                                  key={index}
+                                  disabled={question.type !== 'number'}>
                                   {question.statement}
                                 </option>
                               ))}
@@ -531,7 +560,7 @@ export const NewFormView: React.FC<{
                 <label htmlFor='description'>Description:</label>
                 <input
                   id='description'
-                  placeholder='Provide description (Optional)...'
+                  placeholder='Brief description (optional)...'
                   onChange={handleNewSectionChange}
                 />
                 <div className='form_actions'>

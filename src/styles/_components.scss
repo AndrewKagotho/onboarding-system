@@ -101,6 +101,10 @@
       display: grid;
       grid-template-columns: variables.$margin_left auto;
       row-gap: 0.5rem;
+
+      .highlight {
+        margin-top: 0.3rem;
+      }
     }
 
     .section-new_item {

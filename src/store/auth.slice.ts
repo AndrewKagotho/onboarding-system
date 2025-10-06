@@ -60,7 +60,10 @@ export const login = createAsyncThunk(
       const { data } = await AuthService.login(user)
       localStorage.setItem('user', data._id)
       return data
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response.status === 400) {
+        return Promise.reject('Invalid credentials. Try again...')
+      }
       return Promise.reject(error)
     }
   }
